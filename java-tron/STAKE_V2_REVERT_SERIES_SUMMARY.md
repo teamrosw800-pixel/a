@@ -70,7 +70,8 @@ Las pruebas existentes de estas operaciones también pasaron cuando se ejecutaro
 ### Prueba de mutación (posterior a la ejecución final)
 
 Después de esta ejecución se rompió el código a propósito para validar las pruebas
-(`STAKE_V2_MUTATION_REPORT.md`, con el script en `mutation/stake_v2_revert_mutants.py`): 11 mutantes
+(`STAKE_V2_MUTATION_REPORT.md`; script corregido en `mutation/stake_v2_revert_mutants.py`, el
+ejecutado en `mutation/stake_v2_revert_mutants_as_executed.py`, registros en `mutation/evidence/`): 11 mutantes
 reales y 1 control equivalente. Con predicciones fijadas antes de ejecutar, **los 11 fueron detectados
 por las pruebas esperadas, el control no provocó ningún fallo, y con el código restaurado y
 reconstruido por completo (`--rerun-tasks`) las 48 pruebas vuelven a pasar** (0 fallos, 0 errores).
@@ -166,7 +167,9 @@ Son hechos observados mientras se probaba; no se han evaluado y no se sacan conc
 - Todo desbloqueo, incluso el primero de una cuenta sin votos, escribe el ciclo de inicio de
   recompensas en `DelegationStore` (observado: `0/−1 → 6/−1`).
 - Tras deshacer del todo una delegación, el registro de delegación permanece con saldos a cero
-  mientras que las dos entradas de índice se borran. No se ha evaluado si es intencionado.
+  mientras que las dos entradas de índice se borran. Revisado en `STAKE_V2_ZERO_RECORD_NOTE.md`: la ruta
+  nativa lo borra y la de contrato no, ambas fijadas por pruebas del proyecto, la API lo filtra y la
+  especificación no lo trata; sin contradicción concreta.
 - En el ayudante `unDelegateResource` de `FreezeV2Test`, la aserción de uso del destino resta el uso
   trasladado en ancho de banda pero lo suma en energía; no se manifiesta porque el uso es 0 en esa
   prueba. Es una observación sobre la prueba existente, no sobre el código.

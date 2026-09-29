@@ -76,10 +76,42 @@ El script informó de **2 «fallos inesperados»** en M5. Eran exactamente
 error mío en el código del predicado: buscaba el texto `"Legacy"` con mayúscula, pero esos métodos se
 llaman `legacyEnergyUnfreeze…` con minúscula, así que el script no los predijo aunque mi predicción
 escrita sí los incluía (9 en total: 3 en el mismo marco y 6 anidadas). Los fallos reales fueron 9 y
-coinciden con la predicción escrita. **El defecto sigue en el script tal como se ejecutó**, marcado
-con un comentario `KNOWN DEFECT` y con la expresión corregida indicada; el resultado de la ejecución
-(9 fallos, 2 «inesperados») se conserva sin retocar. Que la predicción escrita coincida no borra ese
-error del script.
+coinciden con la predicción escrita. **El script tal como se ejecutó se conserva** en
+`mutation/stake_v2_revert_mutants_as_executed.py`, con el defecto marcado con un comentario
+`KNOWN DEFECT`; el script corregido (`stake_v2_revert_mutants.py`) ya usa un predicado que reconoce
+`legacy`. El resultado de la ejecución (9 fallos, 2 «inesperados») se conserva sin retocar en
+`mutation/evidence/`. Que la predicción escrita coincida no borra ese error del script.
+
+## 3b. Salvedad del script ejecutado y cómo se respaldan las cifras
+
+Una revisión posterior señaló dos debilidades reales del script tal como se ejecutó:
+
+- **Podía tomar por nuevos unos XML antiguos.** No vaciaba el directorio de resultados ni comprobaba la
+  fecha de los archivos, y daba una ejecución por realizada (`RAN`) si encontraba XML de alguna de las
+  clases esperadas. Si Gradle hubiera fallado antes de ejecutar pruebas (por ejemplo, por un error de
+  compilación), podría haber leído los XML del mutante anterior.
+- **No contaba las pruebas omitidas:** una prueba omitida contaba como no fallida.
+
+**Eso no demuestra que las cifras sean erróneas; hay que respaldarlas.** Con los registros conservados
+(`mutation/evidence/`, antes solo en el directorio temporal de la sesión):
+
+- En los **12 experimentos**, el registro de Gradle muestra que la compilación fue correcta, que la
+  tarea `:framework:test` se ejecutó, y que el **conjunto de pruebas fallidas impreso en el registro es
+  idéntico al del archivo de resultados** (`BUILD FAILED` en los 11 mutantes y `BUILD SUCCESSFUL` en
+  M0). Además, los mensajes de fallo son propios de cada mutante (p. ej. `reward begin cycle` solo en
+  M6), lo que no ocurriría con resultados heredados.
+- **Ninguna prueba omitida:** las 8 clases no usan `@Ignore` ni `Assume`, y los XML de las ejecuciones
+  de la serie muestran `skipped="0"`.
+
+**Script corregido.** El script exactamente como se ejecutó queda como historia en
+`mutation/stake_v2_revert_mutants_as_executed.py`. El corregido (`stake_v2_revert_mutants.py`):
+vacía el directorio de resultados antes de cada ejecución; lee solo XML escritos después de empezar;
+cuenta las pruebas omitidas; compara los fallos del XML con las líneas `FAILED` del registro de Gradle
+(y marca `INCONSISTENT` o `NO_RESULTS` si no coinciden o falta una clase); y corrige el predicado de M5.
+**Prueba de humo:** se ejecutó sobre M0 y M8b, y dio `RAN` con 0 omitidas y **los mismos fallos y el
+mismo texto de la primera aserción fallida** que la ejecución original. **Los otros diez mutantes no
+se volvieron a ejecutar con el script corregido**: sus cifras se apoyan en el script ejecutado más los
+registros conservados.
 
 ## 4. M8 frente a M8b: qué detectaron las pruebas
 
@@ -127,7 +159,10 @@ así que se comprobó de tres maneras:
 - **Bytecode:** el `Program.class` recompilado no contiene el texto que M0 introducía (0
   apariciones), es decir, se recompiló desde el código restaurado.
 
-Los fuentes rastreados no tienen ningún marcador de mutante y `git status` está vacío.
+Los fuentes rastreados no tienen ningún marcador de mutante y `git status` está vacío. Además, en el
+commit `152ea8a` los **1.653 archivos originales de TRON** eran idénticos byte a byte a la versión de
+partida (comparados con un clon de `b33eed8`: 0 ausentes, 0 distintos); lo añadido eran 19 archivos
+(9 documentos, 8 pruebas, el script y un `.gitignore`).
 
 ## 7. Limitaciones
 
@@ -146,6 +181,7 @@ Los fuentes rastreados no tienen ningún marcador de mutante y `git status` est�
 ## 8. Errores míos durante el experimento (no afectan a los resultados)
 
 - El predicado de M5 (sección 3).
+- Las dos debilidades del script ejecutado (sección 3b), señaladas en una revisión posterior.
 - La comprobación en seco encontró que el texto de M0 aparece dos veces; se corrigió el recuento
   antes de ejecutar.
 - Mi primera clasificación de detecciones no reconocía los mensajes de la prueba más antigua
@@ -171,7 +207,10 @@ hacer `commit` mientras corre; se niega a empezar si ya hay archivos rastreados 
 
 ```bash
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-python3 java-tron/mutation/stake_v2_revert_mutants.py            # los 12 experimentos
+python3 java-tron/mutation/stake_v2_revert_mutants.py            # los 12 experimentos (script corregido)
 python3 java-tron/mutation/stake_v2_revert_mutants.py M2 M8b     # solo algunos
-# resultados y registros en java-tron/mutation/out/ (o en $MUTANT_OUT)
+# resultados y registros en java-tron/mutation/out/ (o en $MUTANT_OUT), ignorado por git
 ```
+
+Los registros y resultados de la ejecución original están en `java-tron/mutation/evidence/`, y el
+script exactamente como se ejecutó, en `mutation/stake_v2_revert_mutants_as_executed.py`.
