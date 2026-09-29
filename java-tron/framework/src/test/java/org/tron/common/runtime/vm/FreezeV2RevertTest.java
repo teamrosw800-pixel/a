@@ -85,9 +85,17 @@ public class FreezeV2RevertTest extends BaseMethodTest {
   private static final long[] RESOURCES = {0, 1, 2}; // bandwidth, energy, tron power
 
   private static byte[] owner;
+  private int deployCount;
+
+  @Override
+  protected String[] extraArgs() {
+    // same as FreezeV2Test: disables the VM CPU-time limit, which a cold JVM can hit
+    return new String[]{"--debug"};
+  }
 
   @Override
   protected void afterInit() {
+    deployCount = 0;
     owner = Hex.decode(Wallet.getAddressPreFixString()
         + "abd4b9367799eaa3197fecb144eb71de1e049abc");
     Repository root = RepositoryImpl.createRoot(StoreFactory.getInstance());
@@ -254,9 +262,11 @@ public class FreezeV2RevertTest extends BaseMethodTest {
   }
 
   private byte[] deploy(String code) throws Exception {
-    // consumeUserResourcePercent = 100: the caller pays all the energy, not the contract owner
+    // consumeUserResourcePercent = 100: the caller pays all the energy, not the contract owner.
+    // The name is unique per deployment: the address derives from the txid, so deploying the
+    // same code twice with identical fields would collide.
     Protocol.Transaction trx = TvmTestUtils.generateDeploySmartContractAndGetTransaction(
-        "T", owner, "[]", code, BALANCE, FEE_LIMIT, 100, null, 100_000);
+        "T" + deployCount++, owner, "[]", code, BALANCE, FEE_LIMIT, 100, null, 100_000);
     byte[] address = WalletUtil.generateContractAddress(trx);
     TransactionCapsule cap = new TransactionCapsule(trx);
     TransactionTrace trace = new TransactionTrace(cap, StoreFactory.getInstance(),
