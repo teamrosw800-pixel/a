@@ -67,6 +67,15 @@ Las pruebas existentes de estas operaciones también pasaron cuando se ejecutaro
 (`FreezeV2Test` 8/8, `DelegateResourceActuatorTest` 24/24, `UnDelegateResourceActuatorTest` 16/16,
 `UnfreezeBalanceV2ActuatorTest` 19/19, `StakeV2AfterSelfDestructTest` 3/3).
 
+### Prueba de mutación (posterior a la ejecución final)
+
+Después de esta ejecución se rompió el código a propósito para validar las pruebas
+(`STAKE_V2_MUTATION_REPORT.md`, con el script en `mutation/stake_v2_revert_mutants.py`): 11 mutantes
+reales y 1 control equivalente. Con predicciones fijadas antes de ejecutar, **los 11 fueron detectados
+por las pruebas esperadas, el control no provocó ningún fallo, y con el código restaurado y
+reconstruido por completo (`--rerun-tasks`) las 48 pruebas vuelven a pasar** (0 fallos, 0 errores).
+Esto valida las pruebas; no es un fallo descubierto en el código original.
+
 ## 4. Cierre del hueco de `FREEZEBALANCEV2` («revierte el interno»)
 
 `NestedFreezeV2RevertTest` prueba, para ancho de banda, energía y poder de TRON, un
@@ -98,10 +107,14 @@ Pasaron a la primera.
 - **Sensibilidad «en algún escenario».** Cada comparador cambia en el control de al menos un escenario
   de su operación, pero no en todos; y algunos nunca cambian en ninguno (por ejemplo, la cuenta del
   contrato llamador, la clave de bloqueo del registro de delegación, las listas de entrada del dueño y
-  de salida del destino). Se comparan igualmente, pero su capacidad de detección no está probada.
-  Cada informe lo detalla para su operación.
-- **Sin prueba de mutación** sobre el código de la VM ni de los procesadores: la sensibilidad se apoya
-  en los controles, no en haber roto el código a propósito.
+  de salida del destino). Se comparan igualmente, pero su capacidad de detección no está probada por
+  control ni, salvo los que enumera el informe de mutación, por mutación. Cada informe lo detalla
+  para su operación.
+- **Prueba de mutación limitada** (`STAKE_V2_MUTATION_REPORT.md`): 11 mutantes elegidos a mano, de
+  dos familias (escrituras que se saltan la capa de repositorio y `commit` indebidos), fueron todos
+  detectados y el control equivalente no falló. Solo acredita los comparadores que fueron la primera
+  aserción fallida de alguna prueba; el resto de la sensibilidad sigue apoyándose en los controles.
+  No es mutación exhaustiva ni se mutó la lógica interna de `RepositoryImpl`.
 - **Estado sembrado.** Los votos, los ciclos y los índices de recompensa se escribieron directamente
   en los almacenes (como hace `FreezeV2Test`) en los escenarios que los usan, no con `VOTEWITNESS`
   dentro de la VM.
