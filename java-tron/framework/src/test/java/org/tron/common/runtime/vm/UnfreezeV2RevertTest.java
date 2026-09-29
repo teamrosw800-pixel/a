@@ -60,12 +60,16 @@ import org.tron.protos.contract.Common.ResourceCode;
  *   <li>for tron power it recomputes or clears the account's votes and rewrites the VotesStore.
  * </ul>
  *
- * <p>Four scenarios, each in a fresh Spring context:
+ * <p>Six scenarios, each in a fresh Spring context:
  * <ul>
  *   <li>bandwidth and energy, with a pending history built through the VM: one entry already
  *       expired (paid out by the operation) and one still pending;
  *   <li>tron power with two votes and a pending reward, unfreezing half (votes recomputed) and
- *       all (votes cleared).
+ *       all (votes cleared);
+ *   <li>energy on an account with legacy old tron power and a vote (all votes cleared at once,
+ *       the VotesStore record created: the migration path);
+ *   <li>the first un-freeze of an account with no votes and no history, which still writes the
+ *       reward begin cycle to DelegationStore.
  * </ul>
  *
  * <p>One hand-assembled contract, driven by calldata (five 32-byte words, no selector):
@@ -192,6 +196,12 @@ public class UnfreezeV2RevertTest extends BaseMethodTest {
     runLegacyVotes();
   }
 
+  @Test
+  public void firstBandwidthUnfreezeOfAnAccountIsDiscardedWhenExecutionReverts()
+      throws Exception {
+    runFirst();
+  }
+
   // ---------------------------------------------------------------- scenarios
 
   /** Bandwidth or energy, with one expired and one pending entry already in the list. */
@@ -267,6 +277,63 @@ public class UnfreezeV2RevertTest extends BaseMethodTest {
     Assert.assertNull(c + ": no votes record", afterCommit.votesRecord);
     Assert.assertEquals(c + ": reward settlement is a no-op here (begin cycle already ahead)",
         before.beginCycle, afterCommit.beginCycle);
+    assertOnlyEnergyFeeCharged(c, afterRevert, afterCommit, committed);
+    print(tag, reverted, before, afterCommit);
+  }
+
+  /**
+   * The FIRST un-freeze of an account that has no votes and no pending history. Even then the
+   * reward settlement writes to DelegationStore (the account's begin cycle goes from "never
+   * settled" to the next cycle); the other bandwidth/energy scenarios do not exercise that write
+   * because their setup already settled the account.
+   */
+  private void runFirst() throws Exception {
+    String tag = "bandwidth (first un-freeze of the account)";
+    byte[] stake = deploy();
+    for (int r = 0; r < 2; r++) {
+      Assert.assertEquals(tag + ": setup freeze", 1L,
+          word(trigger(stake, calldata(0, FROZEN, r, 0, 0), SUCCESS), 0));
+    }
+
+    State before = capture(stake);
+    Assert.assertEquals(tag + ": setup bandwidth frozen", FROZEN, before.stake.frozen[0]);
+    Assert.assertEquals(tag + ": setup available balance", BALANCE - 2 * FROZEN,
+        before.stake.available);
+    Assert.assertTrue(tag + ": setup no pending history", before.stake.unfrozen.isEmpty());
+    Assert.assertTrue(tag + ": setup no votes", before.stake.votes.isEmpty());
+    Assert.assertEquals(tag + ": setup begin cycle (never settled)", 0L, before.beginCycle);
+    Assert.assertEquals(tag + ": setup end cycle (never settled)", -1L, before.endCycle);
+
+    long[] expected = {1, FROZEN - UNFREEZE,
+        UnfreezeBalanceV2Actuator.getUNFREEZE_MAX_TIMES() - 1, 0, before.stake.available, 0};
+
+    // ---- reverted run
+    TVMTestResult reverted = trigger(stake, calldata(3, UNFREEZE, 0, T0 / 1000, 1), REVERT);
+    State afterRevert = capture(stake);
+    Assert.assertTrue(tag + ": runtime must be marked as reverted",
+        reverted.getRuntime().getResult().isRevert());
+    assertVisibleInsideExecution(tag + " (reverted)", reverted, expected);
+    assertNothingChanged(tag + " after revert", before, afterRevert);
+    assertOnlyEnergyFeeCharged(tag + " after revert", before, afterRevert, reverted);
+
+    // ---- control
+    TVMTestResult committed = trigger(stake, calldata(3, UNFREEZE, 0, T0 / 1000, 0), SUCCESS);
+    State afterCommit = capture(stake);
+    assertVisibleInsideExecution(tag + " (control)", committed, expected);
+    String c = tag + " control";
+    Assert.assertEquals(c + ": bandwidth frozen", FROZEN - UNFREEZE, afterCommit.stake.frozen[0]);
+    Assert.assertEquals(c + ": pending list", Arrays.asList(entry(BANDWIDTH, UNFREEZE, T0 + DELAY)),
+        afterCommit.stake.unfrozen);
+    Assert.assertEquals(c + ": available balance unchanged (nothing expired)",
+        before.stake.available, afterCommit.stake.available);
+    Assert.assertEquals(c + ": global bandwidth weight drops by the unfrozen TRX",
+        before.weights[0] - UNFREEZE / TRX_PRECISION, afterCommit.weights[0]);
+    Assert.assertEquals(c + ": reward settlement writes the begin cycle even without votes",
+        CYCLE + 1, afterCommit.beginCycle);
+    Assert.assertEquals(c + ": end cycle untouched without votes", before.endCycle,
+        afterCommit.endCycle);
+    Assert.assertNull(c + ": no vote snapshot without votes", afterCommit.accountVoteSnapshot);
+    Assert.assertEquals(c + ": allowance", before.stake.allowance, afterCommit.stake.allowance);
     assertOnlyEnergyFeeCharged(c, afterRevert, afterCommit, committed);
     print(tag, reverted, before, afterCommit);
   }
