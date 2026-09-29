@@ -223,12 +223,15 @@ public class UnfreezeV2RevertTest extends BaseMethodTest {
         before.stake.unfrozen);
     Assert.assertEquals(tag + ": setup: A expired, B not", 1,
         before.stake.unfreezingCountAtTest);
-    Assert.assertEquals(tag + ": setup available balance", BALANCE, before.stake.available);
+    // freezing takes the TRX out of the available balance; nothing had expired yet at setup
+    Assert.assertEquals(tag + ": setup available balance", BALANCE - 2 * FROZEN,
+        before.stake.available);
     Assert.assertEquals(tag + ": setup global weight", FROZEN - ENTRY_A - ENTRY_B,
         before.weights[w] * TRX_PRECISION);
 
     long[] expected = {1, FROZEN - ENTRY_A - ENTRY_B - UNFREEZE,
-        UnfreezeBalanceV2Actuator.getUNFREEZE_MAX_TIMES() - 2, 0, BALANCE + ENTRY_A, 0};
+        UnfreezeBalanceV2Actuator.getUNFREEZE_MAX_TIMES() - 2, 0,
+        before.stake.available + ENTRY_A, 0};
     String callData = calldata(3, UNFREEZE, res, T_TEST / 1000, 1);
 
     // ---- reverted run
@@ -255,7 +258,7 @@ public class UnfreezeV2RevertTest extends BaseMethodTest {
             entry(type, UNFREEZE, T_TEST + DELAY)),
         afterCommit.stake.unfrozen);
     Assert.assertEquals(c + ": the expired entry is paid into the available balance",
-        BALANCE + ENTRY_A, afterCommit.stake.available);
+        before.stake.available + ENTRY_A, afterCommit.stake.available);
     Assert.assertEquals(c + ": global weight of the resource drops by the unfrozen TRX",
         before.weights[w] - UNFREEZE / TRX_PRECISION, afterCommit.weights[w]);
     Assert.assertEquals(c + ": allowance (no votes, no reward)", before.stake.allowance,
@@ -295,6 +298,8 @@ public class UnfreezeV2RevertTest extends BaseMethodTest {
 
     State before = capture(stake);
     Assert.assertEquals(tag + ": setup tron power frozen", TP_FROZEN, before.stake.frozen[2]);
+    Assert.assertEquals(tag + ": setup available balance", BALANCE - TP_FROZEN,
+        before.stake.available);
     Assert.assertEquals(tag + ": setup votes", Arrays.asList(vote(WITNESS_1, VOTES_EACH),
         vote(WITNESS_2, VOTES_EACH)), before.stake.votes);
     Assert.assertNotNull(tag + ": setup votes record", before.votesRecord);
@@ -308,7 +313,8 @@ public class UnfreezeV2RevertTest extends BaseMethodTest {
 
     long usedVotesAfter = full ? 0 : 2 * (VOTES_EACH / 2);
     long[] expected = {1, TP_FROZEN - amount,
-        UnfreezeBalanceV2Actuator.getUNFREEZE_MAX_TIMES() - 1, 0, BALANCE, usedVotesAfter};
+        UnfreezeBalanceV2Actuator.getUNFREEZE_MAX_TIMES() - 1, 0, before.stake.available,
+        usedVotesAfter};
     String callData = calldata(3, amount, 2, T0 / 1000, 1);
 
     // ---- reverted run
@@ -328,8 +334,8 @@ public class UnfreezeV2RevertTest extends BaseMethodTest {
     Assert.assertEquals(c + ": tron power frozen", TP_FROZEN - amount, afterCommit.stake.frozen[2]);
     Assert.assertEquals(c + ": pending list", Arrays.asList(entry(TRON_POWER, amount, T0 + DELAY)),
         afterCommit.stake.unfrozen);
-    Assert.assertEquals(c + ": available balance unchanged (nothing expired)", BALANCE,
-        afterCommit.stake.available);
+    Assert.assertEquals(c + ": available balance unchanged (nothing expired)",
+        before.stake.available, afterCommit.stake.available);
     Assert.assertEquals(c + ": global tron power weight drops by the unfrozen TRX",
         before.weights[2] - amount / TRX_PRECISION, afterCommit.weights[2]);
     Assert.assertEquals(c + ": reward paid into the allowance", REWARD,
@@ -372,6 +378,8 @@ public class UnfreezeV2RevertTest extends BaseMethodTest {
 
     State before = capture(stake);
     Assert.assertEquals(tag + ": setup energy frozen", TP_FROZEN, before.stake.frozen[1]);
+    Assert.assertEquals(tag + ": setup available balance", BALANCE - TP_FROZEN,
+        before.stake.available);
     Assert.assertEquals(tag + ": setup old tron power", TP_FROZEN, before.stake.oldTronPower);
     Assert.assertEquals(tag + ": setup votes", Arrays.asList(vote(WITNESS_1, 100)),
         before.stake.votes);
@@ -380,7 +388,7 @@ public class UnfreezeV2RevertTest extends BaseMethodTest {
     Assert.assertNull(tag + ": setup no vote snapshot", before.accountVoteSnapshot);
 
     long[] expected = {1, TP_FROZEN - amount,
-        UnfreezeBalanceV2Actuator.getUNFREEZE_MAX_TIMES() - 1, 0, BALANCE, 0};
+        UnfreezeBalanceV2Actuator.getUNFREEZE_MAX_TIMES() - 1, 0, before.stake.available, 0};
 
     // ---- reverted run
     TVMTestResult reverted = trigger(stake, calldata(3, amount, 1, T0 / 1000, 1), REVERT);
