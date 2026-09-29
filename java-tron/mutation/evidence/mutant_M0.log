@@ -1,0 +1,79 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. See https://docs.gradle.org/7.6.4/userguide/gradle_daemon.html#sec:disabling_the_daemon.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Building for architecture: amd64, Java version: 1.8
+
+> Task :platform:compileJava UP-TO-DATE
+> Task :protocol:extractIncludeProto UP-TO-DATE
+> Task :protocol:extractProto UP-TO-DATE
+> Task :protocol:generateProto UP-TO-DATE
+> Task :protocol:compileJava UP-TO-DATE
+> Task :common:compileJava UP-TO-DATE
+> Task :crypto:compileJava UP-TO-DATE
+> Task :chainbase:compileJava UP-TO-DATE
+
+> Task :actuator:compileJava
+
+> Task :actuator:processResources NO-SOURCE
+> Task :actuator:classes
+> Task :actuator:jar
+> Task :chainbase:processResources NO-SOURCE
+> Task :chainbase:classes UP-TO-DATE
+> Task :chainbase:jar
+> Task :common:processResources
+> Task :common:classes
+> Task :common:jar
+> Task :consensus:compileJava UP-TO-DATE
+> Task :consensus:processResources NO-SOURCE
+> Task :consensus:classes UP-TO-DATE
+> Task :consensus:jar
+> Task :crypto:processResources NO-SOURCE
+> Task :crypto:classes UP-TO-DATE
+> Task :crypto:jar
+> Task :framework:compileJava UP-TO-DATE
+> Task :framework:generateGitProperties
+> Task :framework:processResources
+> Task :framework:classes
+> Task :framework:compileTestJava UP-TO-DATE
+> Task :framework:processTestResources
+> Task :framework:testClasses
+> Task :platform:processResources NO-SOURCE
+> Task :platform:classes UP-TO-DATE
+> Task :platform:jar
+> Task :protocol:processResources
+> Task :protocol:classes
+> Task :protocol:jar
+
+> Task :framework:test
+
+org.tron.common.runtime.vm.FreezeV2RevertTest > revertOfCallerDiscardsStakeChangesMadeByCallee PASSED
+
+org.tron.common.runtime.vm.FreezeV2RevertTest > revertInSameFrameDiscardsStakeChanges PASSED
+
+org.tron.common.runtime.vm.NestedFreezeV2RevertTest > bandwidthFreezeOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedFreezeV2RevertTest > bandwidthFreezeInnerRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedFreezeV2RevertTest > tronPowerFreezeOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedFreezeV2RevertTest > tronPowerFreezeInnerRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedFreezeV2RevertTest > energyFreezeOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedFreezeV2RevertTest > energyFreezeInnerRevertDiscardsCalleeChanges PASSED
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 8.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+See https://docs.gradle.org/7.6.4/userguide/command_line_interface.html#sec:command_line_warnings
+
+BUILD SUCCESSFUL in 55s
+25 actionable tasks: 14 executed, 11 up-to-date
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=

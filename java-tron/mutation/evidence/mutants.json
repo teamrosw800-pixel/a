@@ -1,0 +1,641 @@
+{
+ "M0": {
+  "id": "M0",
+  "desc": "EQUIVALENT: change a debug log message only (control, must change nothing)",
+  "status": "RAN",
+  "gradle_exit": 0,
+  "seconds": 56,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 8,
+  "failed": 0,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": []
+ },
+ "M1": {
+  "id": "M1",
+  "desc": "top level: commit the root repository even when the transaction REVERTs",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 104,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 48,
+  "failed": 32,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "DelegateResourceRevertTest",
+    "delegatedBandwidthIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: bandwidth after revert / owner: frozenV2, resource 0 expected:<10000000> but was:<6000000>"
+   ],
+   [
+    "DelegateResourceRevertTest",
+    "delegatedEnergyIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: energy after revert / owner: frozenV2, resource 1 expected:<10000000> but was:<6000000>"
+   ],
+   [
+    "FreezeV2RevertTest",
+    "revertInSameFrameDiscardsStakeChanges",
+    "java.lang.AssertionError: direct res=0: contract available balance expected:<100000000000000000> but was:<99999999995000000>"
+   ],
+   [
+    "FreezeV2RevertTest",
+    "revertOfCallerDiscardsStakeChangesMadeByCallee",
+    "java.lang.AssertionError: nested res=0 callee: contract available balance expected:<100000000000000000> but was:<99999999995000000>"
+   ],
+   [
+    "NestedFreezeV2RevertTest",
+    "bandwidthFreezeOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: freeze bandwidth / outer reverts after revert: available balance expected:<100000000000000000> but was:<99999999995000000>"
+   ],
+   [
+    "NestedFreezeV2RevertTest",
+    "energyFreezeOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: freeze energy / outer reverts after revert: available balance expected:<100000000000000000> but was:<99999999995000000>"
+   ],
+   [
+    "NestedFreezeV2RevertTest",
+    "tronPowerFreezeOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: freeze tron power / outer reverts after revert: available balance expected:<100000000000000000> but was:<99999999995000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "delegateBandwidthOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: delegate bandwidth / outer reverts after revert / callee (stake owner): frozenV2, resource 0 expected:<10000000> but was:<6000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "delegateEnergyOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: delegate energy / outer reverts after revert / callee (stake owner): frozenV2, resource 1 expected:<10000000> but was:<6000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate full bandwidth / outer reverts after revert / callee (stake owner): frozenV2, resource 0 expected:<6000000> but was:<10000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate full energy / outer reverts after revert / callee (stake owner): frozenV2, resource 1 expected:<6000000> but was:<10000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "partialBandwidthUnDelegateOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate partial bandwidth / outer reverts after revert / callee (stake owner): frozenV2, resource 0 expected:<6000000> but was:<7000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "partialEnergyUnDelegateOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate partial energy / outer reverts after revert / callee (stake owner): frozenV2, resource 1 expected:<6000000> but was:<7000000>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "firstBandwidthUnfreezeOuterRevertDiscardsCalleeChanges",
+    "unfreeze bandwidth (first un-freeze of the account) / outer reverts after revert: frozenV2 (bandwidth, energy, tron power): arrays first differed at element [0]; expected:<10000000> but was:<9000000>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "fullTronPowerUnfreezeOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze tron power full (votes + reward) / outer reverts after revert: allowance expected:<0> but was:<1500000>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze energy (legacy old tron power + vote) / outer reverts after revert: old tron power expected:<1000000000> but was:<-1>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "partialTronPowerUnfreezeOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze tron power half (votes + reward) / outer reverts after revert: allowance expected:<0> but was:<1500000>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "pendingBandwidthUnfreezeOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze bandwidth (expired + pending) / outer reverts after revert: available balance expected:<99999999980000000> but was:<99999999983000000>"
+   ],
+   [
+    "UnDelegateResourceRevertTest",
+    "fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: bandwidth full after revert / owner: frozenV2, resource 0 expected:<6000000> but was:<10000000>"
+   ],
+   [
+    "UnDelegateResourceRevertTest",
+    "fullEnergyUnDelegationIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: energy full after revert / owner: frozenV2, resource 1 expected:<6000000> but was:<10000000>"
+   ],
+   [
+    "UnDelegateResourceRevertTest",
+    "partialBandwidthUnDelegationIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: bandwidth partial after revert / owner: frozenV2, resource 0 expected:<6000000> but was:<7000000>"
+   ],
+   [
+    "UnDelegateResourceRevertTest",
+    "partialEnergyUnDelegationIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: energy partial after revert / owner: frozenV2, resource 1 expected:<6000000> but was:<7000000>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "bandwidthUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: bandwidth (expired + pending) after revert: available balance expected:<99999999980000000> but was:<99999999983000000>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: energy (expired + pending) after revert: available balance expected:<99999999980000000> but was:<99999999983000000>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: energy (legacy old tron power + vote) after revert: old tron power expected:<1000000000> but was:<-1>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "firstBandwidthUnfreezeOfAnAccountIsDiscardedWhenExecutionReverts",
+    "bandwidth (first un-freeze of the account) after revert: frozenV2 (bandwidth, energy, tron power): arrays first differed at element [0]; expected:<10000000> but was:<9000000>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "fullTronPowerUnfreezeWithVotesAndRewardIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: tron power full (votes + reward) after revert: allowance expected:<0> but was:<1500000>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "partialTronPowerUnfreezeWithVotesAndRewardIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: tron power half (votes + reward) after revert: allowance expected:<0> but was:<1500000>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "cancelByCalleeIsDiscardedWhenOuterReverts",
+    "java.lang.AssertionError: cancel-all / OUTER_REVERTS after revert: available balance expected:<99999999970000000> but was:<99999999975000000>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "cancelInTheSameFrameIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: cancel-all / SAME_FRAME after revert: available balance expected:<99999999970000000> but was:<99999999975000000>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "withdrawByCalleeIsDiscardedWhenOuterReverts",
+    "java.lang.AssertionError: withdraw / OUTER_REVERTS after revert: available balance expected:<99999999970000000> but was:<99999999975000000>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "withdrawInTheSameFrameIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: withdraw / SAME_FRAME after revert: available balance expected:<99999999970000000> but was:<99999999975000000>"
+   ]
+  ]
+ },
+ "M2": {
+  "id": "M2",
+  "desc": "nested: merge (commit) the callee frame into the caller even when it reverted",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 270,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 48,
+  "failed": 16,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "NestedFreezeV2RevertTest",
+    "bandwidthFreezeInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: freeze bandwidth / inner reverts after revert: available balance expected:<100000000000000000> but was:<99999999995000000>"
+   ],
+   [
+    "NestedFreezeV2RevertTest",
+    "energyFreezeInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: freeze energy / inner reverts after revert: available balance expected:<100000000000000000> but was:<99999999995000000>"
+   ],
+   [
+    "NestedFreezeV2RevertTest",
+    "tronPowerFreezeInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: freeze tron power / inner reverts after revert: available balance expected:<100000000000000000> but was:<99999999995000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "delegateBandwidthInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: delegate bandwidth / inner reverts after revert / callee (stake owner): frozenV2, resource 0 expected:<10000000> but was:<6000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "delegateEnergyInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: delegate energy / inner reverts after revert / callee (stake owner): frozenV2, resource 1 expected:<10000000> but was:<6000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate full bandwidth / inner reverts after revert / callee (stake owner): frozenV2, resource 0 expected:<6000000> but was:<10000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate full energy / inner reverts after revert / callee (stake owner): frozenV2, resource 1 expected:<6000000> but was:<10000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "partialBandwidthUnDelegateInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate partial bandwidth / inner reverts after revert / callee (stake owner): frozenV2, resource 0 expected:<6000000> but was:<7000000>"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "partialEnergyUnDelegateInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate partial energy / inner reverts after revert / callee (stake owner): frozenV2, resource 1 expected:<6000000> but was:<7000000>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "firstBandwidthUnfreezeInnerRevertDiscardsCalleeChanges",
+    "unfreeze bandwidth (first un-freeze of the account) / inner reverts after revert: frozenV2 (bandwidth, energy, tron power): arrays first differed at element [0]; expected:<10000000> but was:<9000000>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "fullTronPowerUnfreezeInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze tron power full (votes + reward) / inner reverts after revert: allowance expected:<0> but was:<1500000>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze energy (legacy old tron power + vote) / inner reverts after revert: old tron power expected:<1000000000> but was:<-1>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "partialTronPowerUnfreezeInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze tron power half (votes + reward) / inner reverts after revert: allowance expected:<0> but was:<1500000>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "pendingBandwidthUnfreezeInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze bandwidth (expired + pending) / inner reverts after revert: available balance expected:<99999999980000000> but was:<99999999983000000>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "cancelByCalleeIsDiscardedWhenInnerReverts",
+    "java.lang.AssertionError: cancel-all / INNER_REVERTS after revert: available balance expected:<99999999970000000> but was:<99999999975000000>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "withdrawByCalleeIsDiscardedWhenInnerReverts",
+    "java.lang.AssertionError: withdraw / INNER_REVERTS after revert: available balance expected:<99999999970000000> but was:<99999999975000000>"
+   ]
+  ]
+ },
+ "M3": {
+  "id": "M3",
+  "desc": "freeze: bandwidth global weight written straight to the store",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 142,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 14,
+  "failed": 4,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "FreezeV2RevertTest",
+    "revertInSameFrameDiscardsStakeChanges",
+    "java.lang.AssertionError: direct res=0: global weight counter, resource 0 expected:<0> but was:<5>"
+   ],
+   [
+    "FreezeV2RevertTest",
+    "revertOfCallerDiscardsStakeChangesMadeByCallee",
+    "java.lang.AssertionError: nested res=0 callee: global weight counter, resource 0 expected:<0> but was:<5>"
+   ],
+   [
+    "NestedFreezeV2RevertTest",
+    "bandwidthFreezeInnerRevertDiscardsCalleeChanges",
+    "freeze bandwidth / inner reverts after revert: global weights: arrays first differed at element [0]; expected:<0> but was:<5>"
+   ],
+   [
+    "NestedFreezeV2RevertTest",
+    "bandwidthFreezeOuterRevertDiscardsCalleeChanges",
+    "freeze bandwidth / outer reverts after revert: global weights: arrays first differed at element [0]; expected:<0> but was:<5>"
+   ]
+  ]
+ },
+ "M4": {
+  "id": "M4",
+  "desc": "unfreeze: energy global weight written straight to the store",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 152,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 22,
+  "failed": 4,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "NestedUnfreezeV2RevertTest",
+    "legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges",
+    "unfreeze energy (legacy old tron power + vote) / inner reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges",
+    "unfreeze energy (legacy old tron power + vote) / outer reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts",
+    "energy (expired + pending) after revert: global weights: arrays first differed at element [1]; expected:<5> but was:<4>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts",
+    "energy (legacy old tron power + vote) after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>"
+   ]
+  ]
+ },
+ "M5": {
+  "id": "M5",
+  "desc": "unfreeze: VotesStore record written straight to the store",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 175,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 16,
+  "failed": 9,
+  "unexpected_failures": [
+   {
+    "cls": "NestedUnfreezeV2RevertTest",
+    "method": "legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges",
+    "failed": true,
+    "predicted": false,
+    "msg": "java.lang.AssertionError: unfreeze energy (legacy old tron power + vote) / inner reverts after revert: votes record: expected array was null"
+   },
+   {
+    "cls": "NestedUnfreezeV2RevertTest",
+    "method": "legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges",
+    "failed": true,
+    "predicted": false,
+    "msg": "java.lang.AssertionError: unfreeze energy (legacy old tron power + vote) / outer reverts after revert: votes record: expected array was null"
+   }
+  ],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "NestedUnfreezeV2RevertTest",
+    "fullTronPowerUnfreezeInnerRevertDiscardsCalleeChanges",
+    "unfreeze tron power full (votes + reward) / inner reverts after revert: votes record: array lengths differed, expected.length=79 actual.length=23; arrays first differed at element [23]; expected:<26> but was:<end of array>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "fullTronPowerUnfreezeOuterRevertDiscardsCalleeChanges",
+    "unfreeze tron power full (votes + reward) / outer reverts after revert: votes record: array lengths differed, expected.length=79 actual.length=23; arrays first differed at element [23]; expected:<26> but was:<end of array>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze energy (legacy old tron power + vote) / inner reverts after revert: votes record: expected array was null"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze energy (legacy old tron power + vote) / outer reverts after revert: votes record: expected array was null"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "partialTronPowerUnfreezeInnerRevertDiscardsCalleeChanges",
+    "unfreeze tron power half (votes + reward) / inner reverts after revert: votes record: arrays first differed at element [49]; expected:<-12> but was:<-6>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "partialTronPowerUnfreezeOuterRevertDiscardsCalleeChanges",
+    "unfreeze tron power half (votes + reward) / outer reverts after revert: votes record: arrays first differed at element [49]; expected:<-12> but was:<-6>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: energy (legacy old tron power + vote) after revert: votes record: expected array was null"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "fullTronPowerUnfreezeWithVotesAndRewardIsDiscardedWhenExecutionReverts",
+    "tron power full (votes + reward) after revert: votes record: array lengths differed, expected.length=79 actual.length=23; arrays first differed at element [23]; expected:<26> but was:<end of array>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "partialTronPowerUnfreezeWithVotesAndRewardIsDiscardedWhenExecutionReverts",
+    "tron power half (votes + reward) after revert: votes record: arrays first differed at element [49]; expected:<-12> but was:<-6>"
+   ]
+  ]
+ },
+ "M6": {
+  "id": "M6",
+  "desc": "reward settlement: begin cycle (no-votes branch) written straight to the store",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 144,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 16,
+  "failed": 3,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "NestedUnfreezeV2RevertTest",
+    "firstBandwidthUnfreezeInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze bandwidth (first un-freeze of the account) / inner reverts after revert: reward begin cycle expected:<0> but was:<6>"
+   ],
+   [
+    "NestedUnfreezeV2RevertTest",
+    "firstBandwidthUnfreezeOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: unfreeze bandwidth (first un-freeze of the account) / outer reverts after revert: reward begin cycle expected:<0> but was:<6>"
+   ],
+   [
+    "UnfreezeV2RevertTest",
+    "firstBandwidthUnfreezeOfAnAccountIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: bandwidth (first un-freeze of the account) after revert: reward begin cycle expected:<0> but was:<6>"
+   ]
+  ]
+ },
+ "M7": {
+  "id": "M7",
+  "desc": "undelegate: the two index deletions done straight on the store",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 161,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 16,
+  "failed": 6,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "NestedStakeV2RevertTest",
+    "fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate full bandwidth / inner reverts after revert: from-index entry: actual array was null"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate full bandwidth / outer reverts after revert: from-index entry: actual array was null"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate full energy / inner reverts after revert: from-index entry: actual array was null"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: undelegate full energy / outer reverts after revert: from-index entry: actual array was null"
+   ],
+   [
+    "UnDelegateResourceRevertTest",
+    "fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: bandwidth full after revert: from-index entry: actual array was null"
+   ],
+   [
+    "UnDelegateResourceRevertTest",
+    "fullEnergyUnDelegationIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: energy full after revert: from-index entry: actual array was null"
+   ]
+  ]
+ },
+ "M8": {
+  "id": "M8",
+  "desc": "withdraw: the account written straight to the store",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 127,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 6,
+  "failed": 3,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "withdrawByCalleeIsDiscardedWhenInnerReverts",
+    "java.lang.AssertionError: withdraw / INNER_REVERTS (reverted arm): in-execution available balance (BALANCE) expected:<99999999975000000> but was:<99999999970000000>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "withdrawByCalleeIsDiscardedWhenOuterReverts",
+    "java.lang.AssertionError: withdraw / OUTER_REVERTS (reverted arm): in-execution available balance (BALANCE) expected:<99999999975000000> but was:<99999999970000000>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "withdrawInTheSameFrameIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: withdraw / SAME_FRAME (reverted arm): in-execution available balance (BALANCE) expected:<99999999975000000> but was:<99999999970000000>"
+   ]
+  ]
+ },
+ "M9": {
+  "id": "M9",
+  "desc": "delegate: the delegation record written straight to the store",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 167,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 18,
+  "failed": 6,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "DelegateResourceRevertTest",
+    "delegatedBandwidthIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: bandwidth after revert: delegation record (lock=false key): expected array was null"
+   ],
+   [
+    "DelegateResourceRevertTest",
+    "delegatedEnergyIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: energy after revert: delegation record (lock=false key): expected array was null"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "delegateBandwidthInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: delegate bandwidth / inner reverts after revert: delegation record (lock=false key): expected array was null"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "delegateBandwidthOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: delegate bandwidth / outer reverts after revert: delegation record (lock=false key): expected array was null"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "delegateEnergyInnerRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: delegate energy / inner reverts after revert: delegation record (lock=false key): expected array was null"
+   ],
+   [
+    "NestedStakeV2RevertTest",
+    "delegateEnergyOuterRevertDiscardsCalleeChanges",
+    "java.lang.AssertionError: delegate energy / outer reverts after revert: delegation record (lock=false key): expected array was null"
+   ]
+  ]
+ },
+ "M10": {
+  "id": "M10",
+  "desc": "cancel-all: tron power global weight written straight to the store",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 127,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 6,
+  "failed": 3,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "cancelByCalleeIsDiscardedWhenInnerReverts",
+    "cancel-all / INNER_REVERTS after revert: global weights: arrays first differed at element [2]; expected:<6> but was:<10>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "cancelByCalleeIsDiscardedWhenOuterReverts",
+    "cancel-all / OUTER_REVERTS after revert: global weights: arrays first differed at element [2]; expected:<6> but was:<10>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "cancelInTheSameFrameIsDiscardedWhenExecutionReverts",
+    "cancel-all / SAME_FRAME after revert: global weights: arrays first differed at element [2]; expected:<6> but was:<10>"
+   ]
+  ]
+ },
+ "M8b": {
+  "id": "M8b",
+  "desc": "withdraw: the account written through the repository AND ALSO straight to the store (in-execution reads stay correct; only a post-revert comparison can see it)",
+  "status": "RAN",
+  "gradle_exit": 1,
+  "seconds": 124,
+  "env_429": false,
+  "tree_clean_after": true,
+  "tests": 6,
+  "failed": 3,
+  "unexpected_failures": [],
+  "unexpected_passes": [],
+  "failing": [
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "withdrawByCalleeIsDiscardedWhenInnerReverts",
+    "java.lang.AssertionError: withdraw / INNER_REVERTS after revert: available balance expected:<99999999970000000> but was:<99999999975000000>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "withdrawByCalleeIsDiscardedWhenOuterReverts",
+    "java.lang.AssertionError: withdraw / OUTER_REVERTS after revert: available balance expected:<99999999970000000> but was:<99999999975000000>"
+   ],
+   [
+    "WithdrawAndCancelUnfreezeV2RevertTest",
+    "withdrawInTheSameFrameIsDiscardedWhenExecutionReverts",
+    "java.lang.AssertionError: withdraw / SAME_FRAME after revert: available balance expected:<99999999970000000> but was:<99999999975000000>"
+   ]
+  ]
+ }
+}

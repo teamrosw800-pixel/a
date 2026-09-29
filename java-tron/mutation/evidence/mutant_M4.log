@@ -1,0 +1,613 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. See https://docs.gradle.org/7.6.4/userguide/gradle_daemon.html#sec:disabling_the_daemon.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Building for architecture: amd64, Java version: 1.8
+
+> Task :platform:compileJava UP-TO-DATE
+> Task :protocol:extractIncludeProto UP-TO-DATE
+> Task :protocol:extractProto UP-TO-DATE
+> Task :protocol:generateProto UP-TO-DATE
+> Task :protocol:compileJava UP-TO-DATE
+> Task :common:compileJava UP-TO-DATE
+> Task :crypto:compileJava UP-TO-DATE
+> Task :chainbase:compileJava UP-TO-DATE
+
+> Task :actuator:compileJava
+
+> Task :actuator:processResources NO-SOURCE
+> Task :actuator:classes
+> Task :actuator:jar
+> Task :chainbase:processResources NO-SOURCE
+> Task :chainbase:classes UP-TO-DATE
+> Task :chainbase:jar UP-TO-DATE
+> Task :common:processResources UP-TO-DATE
+> Task :common:classes UP-TO-DATE
+> Task :common:jar UP-TO-DATE
+> Task :consensus:compileJava UP-TO-DATE
+> Task :consensus:processResources NO-SOURCE
+> Task :consensus:classes UP-TO-DATE
+> Task :consensus:jar UP-TO-DATE
+> Task :crypto:processResources NO-SOURCE
+> Task :crypto:classes UP-TO-DATE
+> Task :crypto:jar UP-TO-DATE
+> Task :framework:compileJava UP-TO-DATE
+> Task :framework:generateGitProperties
+> Task :framework:processResources UP-TO-DATE
+> Task :framework:classes
+> Task :framework:compileTestJava UP-TO-DATE
+> Task :framework:processTestResources UP-TO-DATE
+> Task :framework:testClasses UP-TO-DATE
+> Task :platform:processResources NO-SOURCE
+> Task :platform:classes UP-TO-DATE
+> Task :platform:jar UP-TO-DATE
+> Task :protocol:processResources UP-TO-DATE
+> Task :protocol:classes UP-TO-DATE
+> Task :protocol:jar UP-TO-DATE
+
+> Task :framework:test
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / inner reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:201)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > fullTronPowerUnfreezeInnerRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > pendingBandwidthUnfreezeInnerRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > firstBandwidthUnfreezeOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > partialTronPowerUnfreezeOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > firstBandwidthUnfreezeInnerRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > partialTronPowerUnfreezeInnerRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / outer reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > fullTronPowerUnfreezeOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > pendingBandwidthUnfreezeOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > partialTronPowerUnfreezeWithVotesAndRewardIsDiscardedWhenExecutionReverts PASSED
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts FAILED
+    energy (legacy old tron power + vote) after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runLegacyVotes(UnfreezeV2RevertTest.java:466)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts FAILED
+    energy (expired + pending) after revert: global weights: arrays first differed at element [1]; expected:<5> but was:<4>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runPending(UnfreezeV2RevertTest.java:253)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:178)
+
+        Caused by:
+        java.lang.AssertionError: expected:<5> but was:<4>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > firstBandwidthUnfreezeOfAnAccountIsDiscardedWhenExecutionReverts PASSED
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > fullTronPowerUnfreezeWithVotesAndRewardIsDiscardedWhenExecutionReverts PASSED
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > bandwidthUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts PASSED
+
+org.tron.common.runtime.vm.WithdrawAndCancelUnfreezeV2RevertTest > cancelInTheSameFrameIsDiscardedWhenExecutionReverts PASSED
+
+org.tron.common.runtime.vm.WithdrawAndCancelUnfreezeV2RevertTest > withdrawInTheSameFrameIsDiscardedWhenExecutionReverts PASSED
+
+org.tron.common.runtime.vm.WithdrawAndCancelUnfreezeV2RevertTest > withdrawByCalleeIsDiscardedWhenOuterReverts PASSED
+
+org.tron.common.runtime.vm.WithdrawAndCancelUnfreezeV2RevertTest > withdrawByCalleeIsDiscardedWhenInnerReverts PASSED
+
+org.tron.common.runtime.vm.WithdrawAndCancelUnfreezeV2RevertTest > cancelByCalleeIsDiscardedWhenOuterReverts PASSED
+
+org.tron.common.runtime.vm.WithdrawAndCancelUnfreezeV2RevertTest > cancelByCalleeIsDiscardedWhenInnerReverts PASSED
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / inner reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:201)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / outer reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts FAILED
+    energy (legacy old tron power + vote) after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runLegacyVotes(UnfreezeV2RevertTest.java:466)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts FAILED
+    energy (expired + pending) after revert: global weights: arrays first differed at element [1]; expected:<5> but was:<4>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runPending(UnfreezeV2RevertTest.java:253)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:178)
+
+        Caused by:
+        java.lang.AssertionError: expected:<5> but was:<4>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / inner reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:201)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / outer reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts FAILED
+    energy (legacy old tron power + vote) after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runLegacyVotes(UnfreezeV2RevertTest.java:466)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts FAILED
+    energy (expired + pending) after revert: global weights: arrays first differed at element [1]; expected:<5> but was:<4>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runPending(UnfreezeV2RevertTest.java:253)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:178)
+
+        Caused by:
+        java.lang.AssertionError: expected:<5> but was:<4>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / inner reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:201)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / outer reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts FAILED
+    energy (legacy old tron power + vote) after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runLegacyVotes(UnfreezeV2RevertTest.java:466)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts FAILED
+    energy (expired + pending) after revert: global weights: arrays first differed at element [1]; expected:<5> but was:<4>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runPending(UnfreezeV2RevertTest.java:253)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:178)
+
+        Caused by:
+        java.lang.AssertionError: expected:<5> but was:<4>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / inner reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:201)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / outer reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts FAILED
+    energy (legacy old tron power + vote) after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runLegacyVotes(UnfreezeV2RevertTest.java:466)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts FAILED
+    energy (expired + pending) after revert: global weights: arrays first differed at element [1]; expected:<5> but was:<4>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runPending(UnfreezeV2RevertTest.java:253)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:178)
+
+        Caused by:
+        java.lang.AssertionError: expected:<5> but was:<4>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / inner reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeInnerRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:201)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest > legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges FAILED
+    unfreeze energy (legacy old tron power + vote) / outer reverts after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.assertNothingChanged(NestedUnfreezeV2RevertTest.java:513)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.nested(NestedUnfreezeV2RevertTest.java:452)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.runLegacy(NestedUnfreezeV2RevertTest.java:367)
+        at org.tron.common.runtime.vm.NestedUnfreezeV2RevertTest.legacyEnergyUnfreezeOuterRevertDiscardsCalleeChanges(NestedUnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 7 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts FAILED
+    energy (legacy old tron power + vote) after revert: global weights: arrays first differed at element [1]; expected:<1000> but was:<600>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runLegacyVotes(UnfreezeV2RevertTest.java:466)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithLegacyTronPowerClearsVotesAndIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:196)
+
+        Caused by:
+        java.lang.AssertionError: expected:<1000> but was:<600>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+org.tron.common.runtime.vm.UnfreezeV2RevertTest > energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts FAILED
+    energy (expired + pending) after revert: global weights: arrays first differed at element [1]; expected:<5> but was:<4>
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:443)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.assertNothingChanged(UnfreezeV2RevertTest.java:538)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.runPending(UnfreezeV2RevertTest.java:253)
+        at org.tron.common.runtime.vm.UnfreezeV2RevertTest.energyUnfreezeWithExpiredAndPendingEntriesIsDiscardedWhenExecutionReverts(UnfreezeV2RevertTest.java:178)
+
+        Caused by:
+        java.lang.AssertionError: expected:<5> but was:<4>
+            at org.junit.Assert.fail(Assert.java:89)
+            at org.junit.Assert.failNotEquals(Assert.java:835)
+            at org.junit.Assert.assertEquals(Assert.java:120)
+            at org.junit.Assert.assertEquals(Assert.java:146)
+            at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+            at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+            ... 6 more
+
+> Task :framework:test FAILED
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 8.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+See https://docs.gradle.org/7.6.4/userguide/command_line_interface.html#sec:command_line_warnings
+25 actionable tasks: 4 executed, 21 up-to-date
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+
+42 tests completed, 24 failed
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':framework:test'.
+> There were failing tests. See the report at: file:///home/user/a/java-tron/framework/build/reports/tests/test/index.html
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 2m 31s

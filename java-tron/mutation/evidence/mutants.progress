@@ -1,0 +1,26 @@
+START M0 EQUIVALENT: change a debug log message only (control, must change nothing)
+DONE M0 status=RAN tests=8 failed=0 unexpected_fail=0 unexpected_pass=0 clean=True exit=0 56s
+START M1 top level: commit the root repository even when the transaction REVERTs
+DONE M1 status=RAN tests=48 failed=32 unexpected_fail=0 unexpected_pass=0 clean=True exit=1 104s
+START M2 nested: merge (commit) the callee frame into the caller even when it reverted
+DONE M2 status=RAN tests=48 failed=16 unexpected_fail=0 unexpected_pass=0 clean=True exit=1 270s
+START M3 freeze: bandwidth global weight written straight to the store
+DONE M3 status=RAN tests=14 failed=4 unexpected_fail=0 unexpected_pass=0 clean=True exit=1 142s
+START M4 unfreeze: energy global weight written straight to the store
+DONE M4 status=RAN tests=22 failed=4 unexpected_fail=0 unexpected_pass=0 clean=True exit=1 152s
+START M5 unfreeze: VotesStore record written straight to the store
+DONE M5 status=RAN tests=16 failed=9 unexpected_fail=2 unexpected_pass=0 clean=True exit=1 175s
+START M6 reward settlement: begin cycle (no-votes branch) written straight to the store
+DONE M6 status=RAN tests=16 failed=3 unexpected_fail=0 unexpected_pass=0 clean=True exit=1 144s
+START M7 undelegate: the two index deletions done straight on the store
+DONE M7 status=RAN tests=16 failed=6 unexpected_fail=0 unexpected_pass=0 clean=True exit=1 161s
+START M8 withdraw: the account written straight to the store
+DONE M8 status=RAN tests=6 failed=3 unexpected_fail=0 unexpected_pass=0 clean=True exit=1 127s
+START M9 delegate: the delegation record written straight to the store
+DONE M9 status=RAN tests=18 failed=6 unexpected_fail=0 unexpected_pass=0 clean=True exit=1 167s
+START M10 cancel-all: tron power global weight written straight to the store
+DONE M10 status=RAN tests=6 failed=3 unexpected_fail=0 unexpected_pass=0 clean=True exit=1 127s
+ALL_DONE
+START M8b withdraw: the account written through the repository AND ALSO straight to the store (in-execution reads stay correct; only a post-revert comparison can see it)
+DONE M8b status=RAN tests=6 failed=3 unexpected_fail=0 unexpected_pass=0 clean=True exit=1 124s
+ALL_DONE

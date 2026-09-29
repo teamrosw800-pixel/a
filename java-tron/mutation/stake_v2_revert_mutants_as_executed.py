@@ -6,14 +6,7 @@
 # restored with `git checkout` in a `finally`. NEVER commit while it is running. It refuses to start
 # if tracked files are already modified. Predictions are fixed in this file before any run.
 #
-# CORRECTED version. The historical script exactly as executed (only paths adapted, M5 defect commented)
-# is kept as stake_v2_revert_mutants_as_executed.py; its results are in mutation/evidence/.
-# Fixes over the executed version:
-#  - stale JUnit XML can no longer be mistaken for this run: the results directory is cleared before each
-#    run and only XML files written after the run started are read;
-#  - skipped tests are counted and reported instead of silently counting as not failed;
-#  - the failing tests read from the XML are cross-checked against the FAILED lines of the Gradle log;
-#  - the M5 predicate is case-insensitive for 'legacy' (the executed one missed two tests).
+# Executed version, with only the path constants adapted (REPO, S, JAVA_HOME) and the M5 defect commented.
 """Mutation experiment for the Stake 2.0 revert tests.
 
 For each mutant: apply an exact text replacement to one main-source file, run the chosen test
@@ -23,7 +16,6 @@ check that the tracked tree is clean. Predictions are fixed here, BEFORE any run
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 import time
@@ -104,8 +96,11 @@ MUTANTS = [
         edits=[('repo.updateVotes(ownerAddress, votesCapsule);',
                 CB + '.getVotesStore().put(ownerAddress, votesCapsule); // MUTANT M5', 2)],
         classes=["UnfreezeV2RevertTest", "NestedUnfreezeV2RevertTest"],
-        # fixed: the executed version matched only "Legacy" and missed the "legacyEnergyUnfreeze..." tests
-        predict=lambda c, m: has(m, "TronPower", "legacy", "Legacy")),
+        # KNOWN DEFECT, kept as executed: "Legacy" is case-sensitive but the two nested tests are
+        # named "legacyEnergyUnfreeze...", so they were NOT predicted here although the written
+        # prediction included them. The run reported them as 2 "unexpected failures". The intended
+        # predicate is: has(m, "TronPower", "legacy", "Legacy")
+        predict=lambda c, m: has(m, "TronPower", "Legacy")),
     dict(
         id="M6", desc="reward settlement: begin cycle (no-votes branch) written straight to the store",
         file=ACT + "vm/utils/VoteRewardUtil.java",
@@ -178,30 +173,28 @@ def tracked_dirty():
     return out
 
 
-def parse_results(since):
-    """Return {(class, method): dict(failed, skipped, msg)} from XML files written after `since`."""
+def parse_results():
+    """Return {(class, method): (failed: bool, first failure message)}."""
     res = {}
     if not os.path.isdir(RESULTS):
         return res
     for f in os.listdir(RESULTS):
-        fp = os.path.join(RESULTS, f)
-        if not f.endswith(".xml") or os.path.getmtime(fp) < since:
-            continue  # a stale file from an earlier run
-        root = ET.parse(fp).getroot()
+        if not f.endswith(".xml"):
+            continue
+        root = ET.parse(os.path.join(RESULTS, f)).getroot()
         cls = root.get("name").replace(PKG, "")
         for tc in root.findall("testcase"):
             m = tc.get("name")
             bad = tc.find("failure")
             if bad is None:
                 bad = tc.find("error")
-            skipped = tc.find("skipped") is not None
-            prev = res.get((cls, m), dict(failed=False, skipped=False, msg=""))
+            key = (cls, m)
+            prev = res.get(key, (False, ""))
             if bad is not None:
                 msg = (bad.get("message") or "").split("\n")[0][:230]
-                res[(cls, m)] = dict(failed=True, skipped=prev["skipped"], msg=prev["msg"] or msg)
+                res[key] = (True, prev[1] or msg)
             else:
-                res[(cls, m)] = dict(failed=prev["failed"], skipped=prev["skipped"] or skipped,
-                                     msg=prev["msg"])
+                res[key] = (prev[0], prev[1])
     return res
 
 
@@ -220,9 +213,7 @@ def run_mutant(mu):
             return dict(id=mu["id"], status="NOT_APPLIED", detail="expected %d found %d for %r"
                         % (cnt, found, old[:70]))
         mutated = mutated.replace(old, new)
-    shutil.rmtree(RESULTS, ignore_errors=True)  # no stale XML can survive into this run
     t0 = time.time()
-    log = ""
     try:
         open(path, "w").write(mutated)
         cmd = ["./gradlew", "--no-daemon", "--max-workers=1", ":framework:test"]
@@ -234,29 +225,20 @@ def run_mutant(mu):
     finally:
         sh(["git", "checkout", "--", mu["file"]])
     dirty = tracked_dirty()
-    res = parse_results(t0)
-    seen = {c for (c, _) in res}
+    res = parse_results()
+    compiled = any(cls in mu["classes"] for (cls, _) in res)
     rows = []
-    for (cls, m), d in sorted(res.items()):
+    for (cls, m), (failed, msg) in sorted(res.items()):
         if cls not in mu["classes"]:
             continue
-        rows.append(dict(cls=cls, method=m, failed=d["failed"], skipped=d["skipped"],
-                         predicted=bool(mu["predict"](cls, m)), msg=d["msg"]))
+        pred = bool(mu["predict"](cls, m))
+        rows.append(dict(cls=cls, method=m, failed=failed, predicted=pred, msg=msg))
     killed = [r for r in rows if r["failed"]]
-    xml_fail = {(r["cls"], r["method"]) for r in killed}
-    log_fail = set(re.findall(r"^org\.tron\.common\.runtime\.vm\.(\w+) > (\w+) FAILED", log, re.M))
-    missing = [c for c in mu["classes"] if c not in seen]
-    if missing or not rows:
-        status = "NO_RESULTS"          # something did not run: never count it as a result
-    elif xml_fail != log_fail:
-        status = "INCONSISTENT"        # XML and Gradle log disagree
-    else:
-        status = "RAN"
     return dict(
-        id=mu["id"], desc=mu["desc"], status=status, missing_classes=missing,
+        id=mu["id"], desc=mu["desc"], status="RAN" if compiled else "NO_RESULTS",
         gradle_exit=proc.returncode, seconds=round(time.time() - t0),
         env_429=("status code 429" in log), tree_clean_after=(dirty == ""),
-        tests=len(rows), failed=len(killed), skipped=sum(1 for r in rows if r["skipped"]),
+        tests=len(rows), failed=len(killed),
         unexpected_failures=[r for r in rows if r["failed"] and not r["predicted"]],
         unexpected_passes=[r for r in rows if (not r["failed"]) and r["predicted"]],
         failing=[(r["cls"], r["method"], r["msg"]) for r in killed])
@@ -274,9 +256,9 @@ def main():
         r = run_mutant(mu)
         results[mu["id"]] = r
         json.dump(results, open(out, "w"), indent=1)
-        progress("DONE %s status=%s tests=%s failed=%s skipped=%s unexpected_fail=%s "
-                 "unexpected_pass=%s clean=%s exit=%s %ss" % (
-                     mu["id"], r.get("status"), r.get("tests"), r.get("failed"), r.get("skipped"),
+        progress("DONE %s status=%s tests=%s failed=%s unexpected_fail=%s unexpected_pass=%s "
+                 "clean=%s exit=%s %ss" % (
+                     mu["id"], r.get("status"), r.get("tests"), r.get("failed"),
                      len(r.get("unexpected_failures", [])), len(r.get("unexpected_passes", [])),
                      r.get("tree_clean_after"), r.get("gradle_exit"), r.get("seconds")))
     progress("ALL_DONE")

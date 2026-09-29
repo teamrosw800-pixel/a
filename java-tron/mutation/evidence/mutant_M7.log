@@ -1,0 +1,501 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. See https://docs.gradle.org/7.6.4/userguide/gradle_daemon.html#sec:disabling_the_daemon.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Building for architecture: amd64, Java version: 1.8
+
+> Task :platform:compileJava UP-TO-DATE
+> Task :protocol:extractIncludeProto UP-TO-DATE
+> Task :protocol:extractProto UP-TO-DATE
+> Task :protocol:generateProto UP-TO-DATE
+> Task :protocol:compileJava UP-TO-DATE
+> Task :common:compileJava UP-TO-DATE
+> Task :crypto:compileJava UP-TO-DATE
+> Task :chainbase:compileJava UP-TO-DATE
+
+> Task :actuator:compileJava
+
+> Task :actuator:processResources NO-SOURCE
+> Task :actuator:classes
+> Task :actuator:jar
+> Task :chainbase:processResources NO-SOURCE
+> Task :chainbase:classes UP-TO-DATE
+> Task :chainbase:jar UP-TO-DATE
+> Task :common:processResources UP-TO-DATE
+> Task :common:classes UP-TO-DATE
+> Task :common:jar UP-TO-DATE
+> Task :consensus:compileJava UP-TO-DATE
+> Task :consensus:processResources NO-SOURCE
+> Task :consensus:classes UP-TO-DATE
+> Task :consensus:jar UP-TO-DATE
+> Task :crypto:processResources NO-SOURCE
+> Task :crypto:classes UP-TO-DATE
+> Task :crypto:jar UP-TO-DATE
+> Task :framework:compileJava UP-TO-DATE
+> Task :framework:generateGitProperties
+> Task :framework:processResources UP-TO-DATE
+> Task :framework:classes
+> Task :framework:compileTestJava UP-TO-DATE
+> Task :framework:processTestResources UP-TO-DATE
+> Task :framework:testClasses UP-TO-DATE
+> Task :platform:processResources NO-SOURCE
+> Task :platform:classes UP-TO-DATE
+> Task :platform:jar UP-TO-DATE
+> Task :protocol:processResources UP-TO-DATE
+> Task :protocol:classes UP-TO-DATE
+> Task :protocol:jar UP-TO-DATE
+
+> Task :framework:test
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > partialBandwidthUnDelegateInnerRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:200)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:175)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > delegateEnergyOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:180)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > delegateBandwidthOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > delegateEnergyInnerRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > partialEnergyUnDelegateOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > partialBandwidthUnDelegateOuterRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > delegateBandwidthInnerRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:195)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > partialEnergyUnDelegateInnerRevertDiscardsCalleeChanges PASSED
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullEnergyUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: energy full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullEnergyUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:153)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: bandwidth full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:143)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > partialEnergyUnDelegationIsDiscardedWhenExecutionReverts PASSED
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > partialBandwidthUnDelegationIsDiscardedWhenExecutionReverts PASSED
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:200)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:175)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:180)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:195)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullEnergyUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: energy full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullEnergyUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:153)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: bandwidth full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:143)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:200)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:175)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:180)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:195)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullEnergyUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: energy full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullEnergyUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:153)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: bandwidth full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:143)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:200)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:175)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:180)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:195)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullEnergyUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: energy full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullEnergyUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:153)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: bandwidth full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:143)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:200)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:175)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:180)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:195)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullEnergyUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: energy full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullEnergyUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:153)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: bandwidth full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:143)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:200)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:175)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full bandwidth / inner reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullBandwidthUnDelegateInnerRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:180)
+
+org.tron.common.runtime.vm.NestedStakeV2RevertTest > fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges FAILED
+    java.lang.AssertionError: undelegate full energy / outer reverts after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.assertNothingChanged(NestedStakeV2RevertTest.java:321)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.run(NestedStakeV2RevertTest.java:271)
+        at org.tron.common.runtime.vm.NestedStakeV2RevertTest.fullEnergyUnDelegateOuterRevertDiscardsCalleeChanges(NestedStakeV2RevertTest.java:195)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullEnergyUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: energy full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullEnergyUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:153)
+
+org.tron.common.runtime.vm.UnDelegateResourceRevertTest > fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts FAILED
+    java.lang.AssertionError: bandwidth full after revert: from-index entry: actual array was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:49)
+        at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+        at org.junit.Assert.internalArrayEquals(Assert.java:534)
+        at org.junit.Assert.assertArrayEquals(Assert.java:343)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.assertNothingChanged(UnDelegateResourceRevertTest.java:259)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.runScenario(UnDelegateResourceRevertTest.java:204)
+        at org.tron.common.runtime.vm.UnDelegateResourceRevertTest.fullBandwidthUnDelegationIsDiscardedWhenExecutionReverts(UnDelegateResourceRevertTest.java:143)
+
+> Task :framework:test FAILED
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 8.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+See https://docs.gradle.org/7.6.4/userguide/command_line_interface.html#sec:command_line_warnings
+25 actionable tasks: 4 executed, 21 up-to-date
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=37021 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+
+46 tests completed, 36 failed
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':framework:test'.
+> There were failing tests. See the report at: file:///home/user/a/java-tron/framework/build/reports/tests/test/index.html
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+BUILD FAILED in 2m 40s
