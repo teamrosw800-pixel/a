@@ -171,7 +171,9 @@ public class FreezeV2RevertTest extends BaseMethodTest {
       Snapshot callerCommit = snapshot(caller, owner);
       assertReturnedOk(tag + " control", committed);
       assertStakeApplied(tag + " control callee", stakeBefore, stakeCommit, res);
-      assertNoStakeChange(tag + " control caller", callerBefore, callerCommit);
+      // the global counters legitimately move in the control (the callee froze), so compare
+      // only the caller's own account here
+      assertAccountUnchanged(tag + " control caller", callerBefore, callerCommit);
     }
   }
 
@@ -192,12 +194,19 @@ public class FreezeV2RevertTest extends BaseMethodTest {
 
   /** Everything the stake opcode can touch on the contract or globally is unchanged. */
   private static void assertNoStakeChange(String tag, Snapshot before, Snapshot after) {
+    assertAccountUnchanged(tag, before, after);
+    for (int i = 0; i < 3; i++) {
+      Assert.assertEquals(tag + ": global weight counter, resource " + i,
+          before.weight[i], after.weight[i]);
+    }
+  }
+
+  /** Only the contract's own account: balance, frozenV2 balances and the serialized account. */
+  private static void assertAccountUnchanged(String tag, Snapshot before, Snapshot after) {
     Assert.assertEquals(tag + ": contract available balance", before.available, after.available);
     for (int i = 0; i < 3; i++) {
       Assert.assertEquals(tag + ": frozenV2 balance, resource " + i,
           before.frozen[i], after.frozen[i]);
-      Assert.assertEquals(tag + ": global weight counter, resource " + i,
-          before.weight[i], after.weight[i]);
     }
     Assert.assertArrayEquals(tag + ": full serialized contract account",
         before.accountBytes, after.accountBytes);
