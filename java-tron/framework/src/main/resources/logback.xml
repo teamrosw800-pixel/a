@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+  <!-- Propagate logback level changes back to JUL, eliminating the 60x overhead
+       for disabled log statements when using the jul-to-slf4j bridge.
+       resetJUL=true clears any explicit JUL logger levels so that the levels
+       declared below are the effective ones. -->
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+    <resetJUL>true</resetJUL>
+  </contextListener>
+
+  <!-- Be sure to flush latest logs on exit -->
+  <shutdownHook class="org.tron.core.config.TronLogShutdownHook"/>
+  <conversionRule conversionWord="m"
+    converterClass="org.tron.common.log.layout.DesensitizedConverter"/>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level [%t] [%c{1}]\(%F:%L\) %m%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+  </appender>
+
+  <appender class="ch.qos.logback.core.rolling.RollingFileAppender"
+    name="FILE">
+    <file>./logs/tron.log</file>
+    <rollingPolicy
+      class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <!-- rollover daily -->
+      <fileNamePattern>./logs/tron-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+      <!-- each file should be at most 500MB, keep 7 days worth of history, but at most 50GB -->
+      <maxFileSize>500MB</maxFileSize>
+      <maxHistory>7</maxHistory>
+      <totalSizeCap>50GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level [%t] [%c{1}]\(%F:%L\) %m%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>TRACE</level>
+    </filter>
+  </appender>
+
+  <appender name="DB" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>./logs/db/db.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>./logs/db/db-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+      <maxFileSize>500MB</maxFileSize>
+      <maxHistory>7</maxHistory>
+      <totalSizeCap>50GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder charset="UTF-8">
+      <pattern>%d{HH:mm:ss.SSS} %m%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>TRACE</level>
+    </filter>
+  </appender>
+
+  <appender name="GRPC_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>./logs/grpc/grpc.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>./logs/grpc/grpc-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+      <maxFileSize>500MB</maxFileSize>
+      <maxHistory>7</maxHistory>
+      <totalSizeCap>50GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level [%t] [%c{1}] %m%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>TRACE</level>
+    </filter>
+  </appender>
+
+  <appender class="ch.qos.logback.classic.AsyncAppender" name="GRPC">
+    <queueSize>1024</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+    <neverBlock>true</neverBlock>
+    <maxFlushTime>5000</maxFlushTime>
+    <appender-ref ref="GRPC_FILE"/>
+  </appender>
+
+  <appender class="ch.qos.logback.classic.AsyncAppender" name="ASYNC">
+    <!-- Don't discard INFO, DEBUG, TRACE events in case of queue is 80% full -->
+    <discardingThreshold>0</discardingThreshold>
+    <!-- Default is 256 -->
+    <!-- Logger will block incoming events (log calls) until queue will free some space -->
+    <!-- (the smaller value -> flush occurs often) -->
+    <queueSize>100</queueSize>
+    <includeCallerData>true</includeCallerData>
+    <!-- Allow up to 5 s to drain the queue on shutdown before giving up -->
+    <maxFlushTime>5000</maxFlushTime>
+    <appender-ref ref="FILE"/>
+  </appender>
+
+  <appender name="METRICS" class="org.tron.common.prometheus.InstrumentedAppender" />
+
+  <root level="INFO">
+    <!--<appender-ref ref="CONSOLE"/>-->
+    <appender-ref ref="ASYNC"/>
+    <appender-ref ref="METRICS"/>
+  </root>
+
+  <logger level="INFO" name="app"/>
+  <logger level="INFO" name="net"/>
+  <logger level="INFO" name="backup"/>
+  <logger level="INFO" name="discover"/>
+  <logger level="INFO" name="crypto"/>
+  <logger level="INFO" name="utils"/>
+  <logger level="INFO" name="actuator"/>
+  <logger level="INFO" name="API"/>
+  <logger level="INFO" name="witness"/>
+  <logger level="INFO" name="DB"/>
+  <logger level="INFO" name="capsule"/>
+  <logger level="INFO" name="VM"/>
+  <logger level="INFO" name="AccountState"/>
+  <logger level="INFO" name="Commons"/>
+  <logger level="INFO" name="Exit"/>
+  <logger level="INFO" name="Parser"/>
+  <logger level="INFO" name="Repository"/>
+  <logger level="INFO" name="TransactionRegister"/>
+  <logger level="INFO" name="VMConfigLoader"/>
+  <logger level="INFO" name="VMProcessor"/>
+  <logger level="INFO" name="common-executor"/>
+  <logger level="INFO" name="consensus"/>
+  <logger level="INFO" name="db"/>
+  <logger level="INFO" name="event"/>
+  <logger level="INFO" name="httpApiAccessFilter"/>
+  <logger level="INFO" name="httpInterceptor"/>
+  <logger level="INFO" name="metrics"/>
+  <logger level="INFO" name="mortgage"/>
+  <logger level="INFO" name="pbft"/>
+  <logger level="INFO" name="pbft-data-sync"/>
+  <logger level="INFO" name="rewardViCalService"/>
+  <logger level="INFO" name="rpc"/>
+  <logger level="INFO" name="service"/>
+  <logger level="INFO" name="shieldTransaction"/>
+  <logger level="INFO" name="vm"/>
+  <logger level="INFO" name="LEVELDB" additivity="false">
+    <appender-ref ref="DB"/>
+  </logger>
+  <logger level="INFO" name="ROCKSDB" additivity="false" >
+    <appender-ref ref="DB"/>
+  </logger>
+  <logger level="INFO" name="tool" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+  </logger>
+  <logger level="INFO" name="io.grpc" additivity="false">
+    <appender-ref ref="GRPC"/>
+  </logger>
+
+</configuration>
