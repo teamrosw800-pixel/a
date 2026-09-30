@@ -157,10 +157,69 @@ concurrido, se está arreglando ahora mismo?; (6) ¿el programa lo admite?
 | **R6 Cripto protegida** | Cripto compleja y a medida | F7 | Cualquiera con transacciones protegidas | Fondos | Sin revisar | Quizá; requiere especialización |
 | **R7 Capas de reversión** | Repositorios anidados con caché | Serie de 48 pruebas | Cualquier contrato | Estado tras revertir | **Comprobado: sin discrepancia** | Cerrado |
 
-## 5. Siguiente paso propuesto (a decidir con el usuario)
+## 5. Siguiente paso propuesto (a decidir con el usuario) — sustituido por §6.3
+
+(Texto original conservado. Tras el barrido de §6 la prioridad cambió.)
 
 Empezar por **R2 + R3 juntos**: la pregunta común es *"¿hay algún cálculo o rama que dependa de algo que
 no es igual en todos los nodos, o que se comporta distinto con la bandera puesta y quitada?"*. Método:
 lectura dirigida de lo que tocan F3, F4 y F2, pruebas locales con la bandera activada y desactivada, y
 regla de parada de 3 escenarios sin discrepancia por sub-área. Cualquier candidato real se mantiene
 privado, como exige la política de divulgación del programa.
+
+## 6. Revisión 1 (2026-09-30): barrido de determinismo y calibración externa
+
+Solo lectura del código de `b33eed8` y de fuentes públicas. **No hay ningún hallazgo.** Cada punto está
+marcado [código], [razonamiento] o [fuente].
+
+### 6.1 Barrido de "resultados que dependen de la máquina": qué se descartó y por qué
+
+| Hipótesis | Qué comprobé | Resultado |
+|---|---|---|
+| Funciones trascendentes de `Math` (pow, exp, log...) dan distinto en x86 y ARM | `grep` en `actuator`, `chainbase`, `consensus`, `crypto`, `common` | **Ninguna** fuera de `StrictMath` [código] |
+| El límite de tiempo de CPU de la TVM hace que el resultado dependa de la velocidad del nodo | `VMActuator.getCpuLimitInUsRatio`, `Program.checkCPUTimeLimit`, `TransactionTrace.checkNeedRetry/check` | Es **por diseño**: el productor usa ratio 1,0; el validador usa `maxTimeRatio`, o `minTimeRatio` si el bloque registró `OUT_OF_TIME`; si no coincide hay reintento y luego `ReceiptCheckErrException`. Es la raíz "por ser rápido" y no se puede demostrar sin DoS [código] |
+| Trabajo de CPU que la energía no cubre | `MUtil` tiene 7 comprobaciones de tiempo sueltas (hash de campos, 0x0a, create2, modExp, FreezeBalanceV2 tras SELFDESTRUCT, delegado V2 inválido...) | Familia que se parchea **caso a caso**; sigue siendo un río, pero su impacto típico es denegación de servicio [código] |
+| Decodificar bytes con el juego de caracteres por defecto (`new String(bytes)`) | ids de token en `RepositoryImpl` y `Program` | No alcanzable: solo importa para juegos de caracteres compatibles con ASCII y un id de token válido es solo dígitos [razonamiento] |
+| Caché estática no sincronizada `programPrecompileLRUMap` (`LRUMap` no es segura entre hilos) | `Program.getProgramPrecompile` | Las llamadas constantes (las de la API) **no la usan** (compilan en local) y la clave es dirección + hash del código, así que no queda obsoleta [código] |
+| Asimetría productor/validador como la de TIP-2935 (b5b8ee5 admite que existió) | Comparé lo que hacen `generateBlock` y `processBlock` antes del bucle de transacciones | Solo `saveBlockEnergyUsage(0)` difiere; la simulación se descarta y ese contador solo alimenta el cálculo adaptativo posterior [código] |
+| Configuración local que cambia resultados de consenso | Lecturas de `CommonParameter` en actuator, chainbase y consensus | Casi todo son constantes de red; `isECKeyCryptoEngine` cambia el hash del precompilado SHA-256 en redes SM2 (toda la red, no lo explota un atacante) [código] |
+
+### 6.2 Calibración externa [fuente]
+
+- **Auditoría de ChainSecurity (agosto 2024)**, según los resúmenes que pude abrir (el informe original está
+  bloqueado desde aquí): los tres hallazgos más significativos fueron *PBFT Messages Create State
+  Expansion*, *Unpermissioned Censoring of Fork Blocks* y *Resource Consumption by Blocks Not Signed by
+  Witnesses*, todos corregidos. Son de la **capa P2P y de consenso, alcanzables por cualquier par**.
+- **Issue público #6354** (curva inválida en `ECKey.decompressKey()`, propuesto como reclamación de
+  recompensa): aparece cerrado y en lo que pude leer no hay respuesta documentada de los mantenedores.
+  Un argumento criptográfico verosímil no se premia por sí solo.
+- **Issue #6994** (23-sep-2026): los mantenedores proponen endurecer `ECKey` (validación de claves, reglas
+  de validez de puntos). No cita ningún informe concreto.
+- **GitHub Security Advisories**: ninguno publicado para java-tron (comprobado antes en esta sesión).
+
+### 6.3 Nuevo ranking (sustituye a §5)
+
+| Prioridad | Río | Por qué |
+|---|---|---|
+| **Alta** | **R4' P2P y consenso: "aceptar antes de validar"** | Es donde los auditores encontraron lo más significativo; lo alcanza cualquier par sin privilegios; los mantenedores siguen parcheando ahí (F6: `net` 10 commits, `security` 3); se puede probar en local con un nodo y mensajes fabricados, sin red real |
+| Media | R5 tubería multihilo | Se cruza con R4' (mismos hilos y colas) |
+| Media-baja | R3 código nuevo tras propuesta | Barrido de determinismo sin candidatos; sigue siendo código reciente |
+| Baja | R2 determinismo entre nodos | Barrido §6.1 sin candidatos |
+| Aparcados | R1, R7 | Ya revisados |
+
+Raíz de R4' [juicio]: el nodo trabaja sobre datos de un par no autenticado antes de haber demostrado que el
+atacante pagó un coste; cada arreglo cierra un mensaje o un límite, la raíz sigue.
+
+### 6.4 Severidad (cálculo CVSS 3.1 propio, orientativo; el programa decide con su criterio)
+
+- DoS remoto sin autenticación (`AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H`): **7,5, alto**.
+- Aceptar un bloque o transacción inválidos (`.../C:N/I:H/A:H`): **9,1, crítico**.
+- Ambos exigirían un candidato real reproducido en local.
+
+### 6.5 Pregunta de alcance abierta
+
+La ficha enlaza "Core Ineligible Findings" (la lista estándar de HackerOne) y desde aquí no se puede abrir.
+Antes de invertir en R4' hay que confirmar si la **denegación de servicio a nivel de aplicación** (un solo
+mensaje que agota memoria o bloquea el nodo) es elegible. La ficha dice que se puede escribir a
+bounty@tron.network para detalles de alcance. Las pruebas serían solo locales (un nodo propio), nunca contra
+la red real.
