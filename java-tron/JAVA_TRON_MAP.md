@@ -259,3 +259,40 @@ visible).
 Áreas barridas sin hallazgo: reversión Stake 2.0 (§ series), `isVerified`, determinismo (§6.1), precompiladas
 y código nuevo de la TVM (§7). Se cumple la regla de parada de 3 áreas sin discrepancia. El área P2P no se
 pudo tratar en este chat. **Conclusión global: ninguna vulnerabilidad encontrada. Nada que reportar.**
+
+## 8. Revisión 3 (2026-09-30): ¿los cuatro arreglos de `isVerified` comparten la misma raíz?
+
+Solo lectura de los diffs de código principal de `b33eed8`. **No hay ningún hallazgo.**
+
+### 8.1 Qué cambió cada arreglo [código]
+
+| Arreglo | Qué hace | Raíz |
+|---|---|---|
+| #6716 (4f41f26), parte A | Valida la raíz Merkle antes de difundir y **añade la bandera `merkleValidated`** en `BlockCapsule` | Comprobación adelantada + caché nueva |
+| #6716 (4f41f26), parte B | `rePush` borra `isVerified` si el dueño está en `ownerAddressSet` | **Caché de validez de firma** |
+| #6777 (78bc75d) | Vuelve a validar la **firma del bloque** al reaplicar una rama | **Comprobación omitida** en la ruta de reaplicación (no es una caché) |
+| #6796 (2c50400) | `getVerifyTxs` parte de `ownerAddressSet` | **Caché de validez de firma** |
+| #6864 (7ab8945) | Borra `isVerified` de todas las transacciones al cambiar de rama | **Caché de validez de firma** |
+
+**Conclusión:** tres de los cuatro (más media parte de #6716) comparten la raíz "un resultado de validación
+guardado se sigue usando tras un cambio de estado". **El cuarto (#6777) es otra raíz**: un paso de
+verificación que faltaba en una ruta. "Cuatro arreglos, una raíz" es solo parcialmente cierto.
+
+### 8.2 La bandera nueva `merkleValidated` [código]
+
+- Se pone a `true` tras validar y **nunca se reinicia**. Los métodos que reconstruyen el bloque
+  (`addTransaction`, `addAllTransactions`, `setMerkleRoot`, `sign`, `setWitness`, `setAccountStateRoot`)
+  no la invalidan.
+- Busqué quién los llama: solo `generateBlock` y la creación del génesis. Ninguno actúa sobre un bloque
+  recibido que ya haya pasado por `validateMerkleRoot`.
+- **Resultado:** debilidad latente de diseño (la bandera no se invalida al mutar), pero **no alcanzable**
+  con el código actual. Es un dato a favor de la tesis de la raíz: el propio arreglo añadió otra caché de
+  validez sin invalidación.
+
+### 8.3 Hipótesis falsable que queda, de impacto previsiblemente bajo
+
+- **H:** `isVerified` no se invalida cuando cambia un parámetro que afecta a la validez de la firma, por
+  ejemplo `totalSignNum`, que se modifica por propuesta.
+- **Prueba que la refutaría:** una prueba local que verifique una transacción, cambie el parámetro y
+  compruebe si `validateSignature` la vuelve a aceptar.
+- **Límite:** requiere una propuesta de los SR, así que el alcance sin privilegios es bajo.
