@@ -223,3 +223,39 @@ Antes de invertir en R4' hay que confirmar si la **denegación de servicio a niv
 mensaje que agota memoria o bloquea el nodo) es elegible. La ficha dice que se puede escribir a
 bounty@tron.network para detalles de alcance. Las pruebas serían solo locales (un nodo propio), nunca contra
 la red real.
+
+## 7. Revisión 2 (2026-09-30): barrido de precompiladas y código nuevo de la TVM
+
+Solo lectura de `b33eed8`. **No hay ningún hallazgo.** El área P2P quedó fuera de esta revisión.
+
+### 7.1 Precompiladas revisadas
+
+| Precompilada | TIP / cambio | Qué comprobé | Resultado |
+|---|---|---|---|
+| **ModExp** `0x05` | TIP-7883 (coste) + EIP-7823 (cota 1024) | Aritmética con `StrictMathWrapper` (sin desbordar), `intValueSafe` acota las longitudes, cota 1024 bajo Osaka, salida de módulo cero canónica | Protegido |
+| **ValidateMultiSign** `0x0a` | TIP-854 (calldata canónica bajo Osaka) | `isValidAbiEncoding`, tope `MAX_SIZE=5`, dedup de firmas con `checkCPUTime` | Sin discrepancia |
+| **BatchValidateSign** `0x0b` | TIP-854 | `isValidAbiEncoding`, tope `MAX_SIZE=16`, `try/catch` global, espera con límite de CPU | Sin discrepancia |
+| **P256Verify** `0x0100...` | TIP-7951 / EIP-7951 | Longitud fija 160; `r,s ∈ [1,N-1]`; `qx,qy ∈ [0,P-1]`; rechaza `(0,0)`; **sí comprueba pertenencia a la curva** (`createPoint`+`validatePublicPoint`); nunca revierte | Correcto |
+
+### 7.2 Escenario "excepción de precompilada tumba el nodo": descartado [código]
+
+La ruta pre-Osaka de `ValidateMultiSign` lee `words[words[3].intValueSafe()/32]` sin `try/catch` local (el
+`try` empieza después). Una calldata maliciosa puede lanzar `ArrayIndexOutOfBoundsException` ahí. Seguí la
+propagación: `callToPrecompiledAddress` no la captura → sube a `VM.play`, cuyo bucle captura toda
+`RuntimeException` (línea ~93), gasta toda la energía, detiene el programa y la relanza; el `catch` exterior
+(línea ~112) la convierte en `setRuntimeFailure`. **Resultado:** la transacción falla y el atacante gasta su
+propia energía; el nodo no cae. No es una denegación de servicio.
+
+### 7.3 Contraste con el issue público #6354
+
+El issue #6354 señalaba que `ECKey.decompressKey()` (secp256k1, recuperación de firma) no comprueba
+pertenencia a la curva. En cambio, la precompilada nueva **P256Verify sí la comprueba** (secp256r1). Son
+rutas distintas. No verifiqué el camino de `ECKey`; queda como posible lectura futura, pero un argumento
+criptográfico sin impacto reproducible no se premia (lo confirma el propio #6354, cerrado sin recompensa
+visible).
+
+### 7.4 Estado
+
+Áreas barridas sin hallazgo: reversión Stake 2.0 (§ series), `isVerified`, determinismo (§6.1), precompiladas
+y código nuevo de la TVM (§7). Se cumple la regla de parada de 3 áreas sin discrepancia. El área P2P no se
+pudo tratar en este chat. **Conclusión global: ninguna vulnerabilidad encontrada. Nada que reportar.**
