@@ -33,6 +33,7 @@ Fecha de las mediciones: 2026-10-01. Entorno: Java 8 (OpenJDK 1.8.0_504), Gradle
 | R5 concurrencia | 273 (`ConcurrentHashMap`, ejecutores, hilos) + 101 `synchronized` | Estado compartido sin protección en la tubería de bloques | — | Abierto |
 | R7 reversión | 60 | Revertir no descarta algún cambio | 48 pruebas | **Cerrado** |
 | R-tiempo (CPU) | 27 | El resultado depende de la velocidad del nodo | — | Diseño conocido (ratio de tiempo); su comprobación exige carga, fuera de alcance |
+| R10 coma flotante en consenso | 56 apariciones de `double` en 22 archivos; 5 usos de `pow` | El consenso depende de la precisión de `double` en algún cálculo que mueva valor | Propiedades (salida acotada, monótona, ida y vuelta) con oráculo y medición de error | **Medido** (ver Intercambio): error acotado, ≈2e-12 de la reserva por ida y vuelta |
 | R8 configuración local → validez | 7 mandos locales en rutas de validación | Un tercero sin privilegios puede cambiar la validez con una opción local | Listar mandos y quién los controla | **Cerrado** (ver abajo) |
 
 ### R8: configuración local que afecta a la validez
@@ -119,6 +120,51 @@ comparten. Por eso se añadió un oráculo en `BigInteger` (caso `lastTime == no
 - **Conclusión:** endurecimiento incompleto en una zona inalcanzable, no una vulnerabilidad. No se
   considera apto para reportar: no hay impacto demostrable con valores posibles. Queda anotado como
   pregunta de diseño para los mantenedores.
+
+## Dónde se cruzan los ríos (medido)
+
+Archivos de código principal que coinciden con el patrón de cada río; la intersección dice dónde dos
+ríos comparten código. Los patrones son expresiones regulares: cifras orientativas (por ejemplo `R1`
+sale con 1 archivo aquí y con 2 en el recuento anterior, por la forma del patrón).
+
+| Archivos | Intersección |
+|---|---|
+| 33 | banderas ∩ aritmética |
+| 26 | banderas ∩ configuración local |
+| 18 | concurrencia ∩ configuración local |
+| 16 | concurrencia ∩ P2P |
+| 15 | configuración local ∩ aritmética |
+| 12 | configuración local ∩ APIs |
+
+**Archivos que tocan 5 ríos a la vez:** `core/db/Manager.java` (R1, R3, R5, R7, R8),
+`core/vm/program/Program.java`, `core/actuator/VMActuator.java` y `core/vm/PrecompiledContracts.java`
+(R3, CPU, R8, aritmética y reversión o concurrencia). Con `RepositoryImpl.java`, `Args.java` y
+`RelayService.java` (4 ríos) son los puntos donde un cambio en un río puede afectar a otro.
+
+Un fallo que encadene ríos tendría que pasar por alguno de estos archivos. Que dos ríos compartan un
+archivo no implica que exista una cadena explotable: solo marca dónde mirar.
+
+## Intercambio (R10): propiedades de `ExchangeProcessor` y `SafeExchangeProcessor`
+
+Prueba: `tests/ExchangeInvariantTest.java` (va en `framework/src/test/java/org/tron/core/capsule/`).
+200.000 casos por implementación, semilla fija, reservas de 1e3 a 1e15.
+
+| Propiedad | Antigua (`ExchangeProcessor`) | Segura (`SafeExchangeProcessor`) |
+|---|---|---|
+| I1 salida entre 0 y la reserva | 0 violaciones | 0 violaciones |
+| I3 monótona (más entrada, no menos salida) | 0 violaciones | 0 violaciones |
+| I2 ida y vuelta no devuelve más de lo enviado | 5.907 casos (≈3 %) | 5.794 casos (≈3 %) |
+| Ganancia máxima de una ida y vuelta / reserva | 1,98e-12 | 1,92e-12 |
+
+- **Lectura:** la versión "segura" sigue usando `double` para `pow(base, 0.0005)` y `pow(base, 2000)`
+  (`SafeExchangeProcessor`). Su objetivo es el determinismo entre nodos y evitar desbordamiento, no la
+  exactitud: el error relativo de `double` (≈1e-16) se amplifica por 2000. Resultado: una ida y vuelta puede
+  devolver hasta ≈2e-12 de la reserva más de lo enviado. Para cantidades muy pequeñas respecto a la
+  reserva el error relativo sobre la propia cantidad es grande.
+- **Valoración:** es un error de redondeo ("polvo"): acotado, del mismo orden en las dos versiones, y
+  cada intento exige una transacción con su coste. No se considera apto para reportar y no se
+  documentan entradas concretas. Queda como observación: `I2` solo se puede garantizar hasta esa cota.
+- La prueba afirma I1, I3 y que la ganancia de ida y vuelta no supere 1e-11 de la reserva (hoy 2e-12).
 
 ## Matriz de actuadores (qué valida cada uno)
 
