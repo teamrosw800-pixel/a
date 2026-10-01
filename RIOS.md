@@ -9,14 +9,17 @@ Fecha de las mediciones: 2026-10-01. Entorno: Java 8 (OpenJDK 1.8.0_504), Gradle
 ## Verificación hecha en esta sesión
 
 - Las **48 pruebas** `*RevertTest` (Stake 2.0) se ejecutaron en este entorno: **48 pasan, 0 fallan**
-  (`org.tron.common.runtime.vm.*RevertTest`, módulo `framework`, commit `3399552`).
+  (`org.tron.common.runtime.vm.*RevertTest`, módulo `framework`).
+  **Sobre los dos commits:** `b33eed8` es el commit de java-tron (upstream) que se analiza. `3399552` es el
+  commit de *este* repositorio, que contiene esa copia de java-tron más las pruebas y documentos. No son
+  versiones distintas del código analizado.
   Desglose: 12 + 10 + 6 + 6 + 6 + 4 + 2 + 2.
 
 ## Medidas de superficie (código principal, sin pruebas)
 
 | Medida | Valor |
 |---|---|
-| Servlets HTTP | 133 |
+| Servlets HTTP | 131 en `services/http/` + 2 en `services/http/solidity/` = **133**. La sección R4 analiza los 131 del directorio principal. Contando los espejos de PBFT y solidity, el árbol `services/` tiene 232 archivos `*Servlet.java` |
 | Métodos gRPC (`api.proto`, todos los servicios; techo, puede haber repetidos) | 203 |
 | Métodos JSON-RPC | 52 |
 | Manejadores de mensajes P2P | 9 |
@@ -30,9 +33,9 @@ Fecha de las mediciones: 2026-10-01. Entorno: Java 8 (OpenJDK 1.8.0_504), Gradle
 | R1 caché `isVerified` | 12 (7 `TransactionCapsule`, 5 `Manager`) | La verificación cacheada se reutiliza tras cambiar el estado | Revisar los puntos que la escriben o borran | **Cerrado**: `switchFork` la reinicia antes de reaplicar |
 | R3 banderas de gobernanza | 443 consultas `allow*` / `VMConfig`; 77 tipos de propuesta | Alguna rama se comporta distinto con la bandera puesta y quitada | Pruebas con bandera activada y desactivada | Parcial: medido; subcaso `HARDEN_RESOURCE` cerrado (ver abajo); el resto sin revisar |
 | R9 fórmula duplicada, dos fuentes de bandera | 2 copias de las fórmulas de recursos | Las dos copias dejan de coincidir en el momento de activar la propuesta | Leer cuándo se refresca cada fuente y quién llama a cada copia | **Cerrado** para consenso (ver abajo) |
-| R5 concurrencia | 273 (`ConcurrentHashMap`, ejecutores, hilos) + 101 `synchronized` | Estado compartido sin protección en la tubería de bloques | — | Abierto |
 | R7 reversión | 60 | Revertir no descarta algún cambio | 48 pruebas | **Cerrado** |
 | R-tiempo (CPU) | 27 | El resultado depende de la velocidad del nodo | — | Diseño conocido (ratio de tiempo); su comprobación exige carga, fuera de alcance |
+| R11 precompiladas: coste real frente a energía cobrada | 34 precompiladas direccionables; `checkCPUTimeLimit` aparece 6 veces en el árbol | Alguna precompilada consume más CPU de la que cobra | Medir tiempo por unidad de energía en cada una, en local | **Medido**: desproporción real en Blake2F, encuadre DoS, no reportable (ver abajo) |
 | R10 coma flotante en consenso | 56 apariciones de `double` en 22 archivos; 5 usos de `pow` | El consenso depende de la precisión de `double` en algún cálculo que mueva valor | Propiedades (salida acotada, monótona, ida y vuelta) con oráculo y medición de error | **Medido** (ver Intercambio): error acotado, ≈2e-12 de la reserva por ida y vuelta |
 | R4 APIs HTTP (131 servlets) | 131 servlets, 203 métodos gRPC, 52 JSON-RPC | Alguna puerta HTTP no limita el tamaño del cuerpo | Comparar las guardas de los 131 servlets y el límite del servidor | **Cerrado**: límite global (ver abajo) |
 | R5 concurrencia (estado compartido mutable) | 98 campos de clase con colección no concurrente; 4 compartidos y mutables en ejecución | Un campo mutable lo tocan hilos distintos sin cerrojo común, con efecto sobre el estado de cadena | Clasificar los 98 y mirar quién escribe y quién lee | **Medido**: 4 candidatos, sin efecto sobre consenso (ver abajo) |
@@ -84,8 +87,7 @@ mantenedores.
   que parecía usar la fórmula del lado TVM usa `EnergyProcessor`, que lee el almacén en vivo.
 - **Observación de diseño:** `VMConfig.globalSnapshot` nace con todo a `false`. Cualquier llamador futuro
   fuera de una transacción de contrato leería valores por defecto, no los de la cadena. Hoy no existe.
-- **Prueba que quedaría (no hecha):** una prueba diferencial en local entre la fórmula del lado TVM y la
-  de los procesadores, con la bandera activada y desactivada, sobre entradas aleatorias.
+- **Prueba hecha:** la prueba diferencial descrita en la sección siguiente.
 
 ### Prueba diferencial de las dos copias (hecha)
 
@@ -103,6 +105,14 @@ lo que se generan solo entradas con `now >= lastTime`.
 
 **Las dos copias coinciden.** Con esto la hipótesis de R9 queda cerrada también por prueba, no solo por lectura.
 
+**Alcance real de la prueba (corregido el 2026-10-01).** La propuesta 97 cambia **cuatro** fórmulas, y esta
+prueba compara solo dos (`increase` y `getUsage`). Las otras dos (`usageToBalance` y
+`calculateGlobalEnergyLimit`) **ya están cubiertas por las pruebas que trae el propio PR upstream**
+(`RepositoryImplHardenTest`, `ResourceProcessorHardenTest` y `CalculateGlobalLimitHardenTest`), con
+oráculos en `BigInteger`. Ampliar la prueba diferencial a esas dos habría duplicado cobertura existente.
+También se verificó que la asimetría V1/V2 entre el lado TVM y chainbase está contemplada como esperada en
+esas pruebas.
+
 ### Límite de la prueba diferencial y oráculo independiente
 
 Las dos copias son idénticas, así que una prueba que las compara no detecta un defecto que ambas
@@ -112,8 +122,11 @@ comparten. Por eso se añadió un oráculo en `BigInteger` (caso `lastTime == no
   `averageLastUsage += averageUsage;` es una suma de `long` sin comprobar. Cada término se comprueba por
   separado (`longValueExact`), pero **su suma no**. Si cada uno cabe en 64 bits y la suma no, el
   resultado se enrolla a negativo sin excepción.
-- **Resultado del oráculo:** 5.026 casos con uso hasta 1e12 (unas 10 veces el límite total de energía de la
-  red; con esa cota ningún desbordamiento es posible con ninguna ventana): **0 violaciones**. Fuera de
+- **Resultado del oráculo:** 5.026 casos con uso hasta 1e12: **0 violaciones**.
+  **Corrección del número usado como cota (2026-10-01):** aquí se dijo "unas 10 veces el límite total de
+  energía de la red" sin anotar el valor. El valor real de mainnet es
+  `TotalEnergyCurrentLimit = 1,8e11`, así que 1e12 son **5,6 veces** ese límite, no 10. La conclusión no
+  cambia (0 violaciones por debajo de esa cota), pero el factor citado era incorrecto. Fuera de
   esa cota, 14 violaciones sobre 34.974 casos, todas con el patrón anterior. Ejemplo:
   `increase(7524290872464, 8206654683304, 5, 5, 1)` devuelve `-2715798517941` en lugar de lanzar excepción.
 - **Alcance:** exige un uso de recursos de entre 1e12 y 1e18 y, en algunos casos, ventanas de 1 slot. El uso
@@ -181,6 +194,10 @@ Medido con un script sobre `framework/.../services/http/*Servlet.java`.
 | Con `doPost` que no leen cuerpo (consultas sin parámetros) | 18 |
 | Servlets que manejan el error por su cuenta en lugar de `Util.processError` | 9 |
 
+**Las categorías se solapan:** 87 + 23 + 25 + 18 = 153 > 129, porque una misma clase puede caer en varias
+(por ejemplo, un servlet que usa `PostParams` en `doPost` y además lee el cuerpo a mano en otro método).
+No son conjuntos disjuntos.
+
 - **Valor atípico:** `BroadcastHexServlet` lee el cuerpo a mano y no llama a `checkBodySize` ni usa
   `PostParams`. **Hipótesis:** esa puerta no tiene límite de tamaño. **Refutada:** cada servicio HTTP
   (`HttpService.java:91`) envuelve todo en un `SizeLimitHandler(maxRequestSize, -1)` de Jetty, con el valor de
@@ -228,6 +245,76 @@ privilegios. Lo más cercano (`syncBlockInProcess`) está en una familia que los
 abierta. Queda sin revisar la corrección de los cerrojos de `Manager` (la combinación `synchronized(this)`,
 `transactionLock`, `forkLock` y los bloqueos de `pushBlock`), que es donde más ayuda el razonamiento que el
 recuento.
+
+## R11: precompiladas, coste real frente a energía cobrada
+
+Medición hecha en una sesión paralela sobre `develop 4a21592f95`, con los cuatro archivos implicados
+verificados como idénticos a `b33eed8`. **Los datos estructurales de abajo los volví a comprobar yo contra
+el código; los tiempos medidos no los he reproducido en este entorno.**
+
+### Censo: son 34, no 32 ni 35 (verificado aquí)
+
+Tres recuentos independientes coinciden en **34**: campos `private static final DataWord ...Addr` = 34,
+clases con `getEnergyForData(byte[])` = 34, e instancias devueltas por `getContractForAddress` = 34.
+- El 32 del mapa venía de un `grep` por `extends PrecompiledContract`, que pierde las tres que heredan de
+  la clase intermedia `VerifyProof`.
+- Un recuento de 35 incluiría `VerifyProof`, que es `public abstract static class` (línea 1248) y no tiene
+  dirección: no es invocable.
+
+### Dónde se comprueba el tiempo de CPU (verificado aquí)
+
+`checkCPUTimeLimit` / `getCPUTimeLeftInNanoSecond` aparecen **6 veces** en todo el código principal:
+`Program.java:1252` (el cuerpo), `VM.java:87`, `VMActuator.java:202`,
+`PrecompiledContracts.java:481` (el ayudante), `:1202` y `:1589`.
+
+En el bucle de opcodes la comprobación va **antes** de ejecutar (`VM.java:87` comprueba, `:90` ejecuta).
+Por tanto el tope de 80 ms (`getMaxCpuTimeOfOneTx`) se comprueba **entre** opcodes: una precompilada corre
+entera y el exceso se detecta después, cuando el tiempo ya se gastó. Solo **2 de las 34** miran el reloj
+por dentro:
+- `BatchValidateSign` (`:1202`) lo lee y lanza `notEnoughTime` si se agota. Guarda viva.
+- `VerifyTransferProof` (`:1589`) asigna `boolean withNoTimeout = countDownLatch.await(...)` y **nunca lo
+  lee**. Guarda muerta. Verificado leyendo las líneas 1585-1600.
+
+### El caso con más desproporción: Blake2F
+
+`getEnergyForData` devuelve `rounds.longValue()`, donde `rounds` sale de los **4 primeros bytes de la
+entrada**, que elige quien llama: **1 energía por ronda** (verificado aquí).
+Las mediciones de la sesión paralela dan un coste marginal de ~21 ns por ronda, es decir unos **41 ns por
+unidad de energía**, frente a ~0,02 ns/energía de `Identity` con entrada grande. Una llamada de 1e7 rondas
+tardó ~411 ms gastando el tope de energía de una transacción.
+
+**Tope de energía por transacción (verificado aquí):** `maxFeeLimit` por defecto = `1_000_000_000` sun y
+`DEFAULT_ENERGY_FEE` = 100 sun/energía ⇒ **1e7 de energía por transacción**. (Una cifra de 15.000 TRX que
+se manejó en la sesión paralela era inventada y quedó corregida.)
+
+**Valoración:** la desproporción es real y medible, pero el efecto es consumo de CPU por encima de lo
+cobrado, es decir **denegación de servicio**. El atacante paga su propia energía en cada intento y el tope
+por transacción acota cada llamada. Encaja con el issue que los propios mantenedores ya tienen abierto
+sobre comprobaciones de tiempo de grano fino en precompiladas, que nombra `BatchValidateSign` y
+`VerifyTransferProof`. **No se considera reportable** y no se desarrolla más aquí.
+
+### Rama de decaimiento de `increase` (completa el hueco de R10)
+
+El oráculo de la sección anterior solo cubría `lastTime == now`. La sesión paralela midió la otra rama, la
+que aplica `round(averageLastUsage * decay)` en `double`:
+
+- `Math.round` **satura** a `Long.MAX_VALUE` en vez de desbordar, y la suma posterior sigue sin comprobarse,
+  así que puede salir un valor negativo sin excepción. `getUsage(-1000000, 28800) = -28800` cabe en `long`,
+  de modo que `longValueExact` tampoco lo detecta.
+- En 4.648 casos del barrido: **TVM y chainbase divergen 0 veces** (no hay divergencia de consenso) y ambas
+  divergen del oráculo exacto en 176 casos.
+- **Cota de alcanzabilidad:** con la bandera en el estado real de mainnet (la propuesta 97 **no está
+  activada**), el valor negativo exige `usage > 9,22e12`, que es **922.337 veces** la energía máxima de una
+  transacción (1e7) y unas **51 veces** el `TotalEnergyCurrentLimit` de 1,8e11.
+- **Conclusión:** misma familia que lo ya anotado. Defecto de endurecimiento incompleto, inalcanzable por
+  varios órdenes de magnitud. No reportable.
+
+### Dato que corrige una suposición anterior
+
+La medición inicial de la sesión paralela se hizo con `allowHardenResourceCalculation = 1`, pero en mainnet
+la propuesta 97 **está a 0**: lo que corre hoy es la rama *no* endurecida. El ejemplo
+`increase(7524290872464, 8206654683304, 5, 5, 1) = -2715798517941` documentado más arriba se reprodujo
+contra el código real en esa rama viva, con el mismo valor.
 
 ## Matriz de actuadores (qué valida cada uno)
 
