@@ -28,7 +28,8 @@ Fecha de las mediciones: 2026-10-01. Entorno: Java 8 (OpenJDK 1.8.0_504), Gradle
 | Río | Contactos | Hipótesis (refutable) | Prueba que la cierra | Estado |
 |---|---|---|---|---|
 | R1 caché `isVerified` | 12 (7 `TransactionCapsule`, 5 `Manager`) | La verificación cacheada se reutiliza tras cambiar el estado | Revisar los puntos que la escriben o borran | **Cerrado**: `switchFork` la reinicia antes de reaplicar |
-| R3 banderas de gobernanza | 443 consultas `allow*` / `VMConfig` | Alguna rama se comporta distinto con la bandera puesta y quitada | Pruebas con bandera activada y desactivada | Abierto, sin revisar en profundidad |
+| R3 banderas de gobernanza | 443 consultas `allow*` / `VMConfig`; 77 tipos de propuesta | Alguna rama se comporta distinto con la bandera puesta y quitada | Pruebas con bandera activada y desactivada | Parcial: medido; subcaso `HARDEN_RESOURCE` cerrado (ver abajo); el resto sin revisar |
+| R9 fórmula duplicada, dos fuentes de bandera | 2 copias de las fórmulas de recursos | Las dos copias dejan de coincidir en el momento de activar la propuesta | Leer cuándo se refresca cada fuente y quién llama a cada copia | **Cerrado** para consenso (ver abajo) |
 | R5 concurrencia | 273 (`ConcurrentHashMap`, ejecutores, hilos) + 101 `synchronized` | Estado compartido sin protección en la tubería de bloques | — | Abierto |
 | R7 reversión | 60 | Revertir no descarta algún cambio | 48 pruebas | **Cerrado** |
 | R-tiempo (CPU) | 27 | El resultado depende de la velocidad del nodo | — | Diseño conocido (ratio de tiempo); su comprobación exige carga, fuera de alcance |
@@ -48,6 +49,40 @@ límite de CPU en `Program`), `getCheckFrozenTime` y `getConstantCallTimeoutMs`.
   configuración, así que no son alcanzables sin privilegios. Queda como observación de diseño: reglas
   de consenso que dependen de un mando "solo para pruebas".
 - 51 de las lecturas de `CommonParameter` están en `DynamicPropertiesStore` y son valores iniciales.
+
+## R3: banderas de gobernanza (medición)
+
+Se cruzaron los 77 tipos de `ProposalUtil.ProposalType` con sus consultas en el código principal
+(emparejando nombres sin distinguir mayúsculas ni guiones bajos).
+
+- **11** propuestas tienen 2 líneas consumidoras o menos; **9** no aparecen en ninguna prueba.
+- **Corrección propia:** una primera pasada dio varios "sin consumidor" que eran un fallo de
+  emparejamiento. `TOTAL_CURRENT_ENERGY_LIMIT` se lee como `getTotalEnergyCurrentLimit` (palabras en
+  otro orden, 10 usos). Cualquier cifra de esta sección es orientativa.
+- Las propuestas más recientes (códigos 94 a 98) tienen entre 2 y 15 líneas consumidoras y entre 3 y 9
+  archivos de prueba cada una.
+
+### Subcaso `ALLOW_HARDEN_RESOURCE_CALCULATION` (97) y R9
+
+La propuesta sustituye cuatro fórmulas de recursos de `RepositoryImpl` (lado TVM: `usageToBalance`,
+`increase`, `getUsage`, `calculateGlobalEnergyLimit`) y las equivalentes de `ResourceProcessor`
+(lado procesadores). La versión antigua usa `double` o multiplica `long` sin comprobar desbordamiento; la
+nueva usa `BigInteger` con `longValueExact`. Es un indicio de qué cálculos consideraron mejorables los
+mantenedores.
+
+- **Dos fuentes de la bandera:** el lado TVM la lee de `VMConfig` (una instantánea que
+  `ConfigLoader.load` rellena desde el almacén); el lado procesadores la lee en vivo de
+  `DynamicPropertiesStore`.
+- **Hipótesis:** una ruta de consenso usa la fórmula del lado TVM antes de que se cargue la instantánea,
+  y por tanto con un valor antiguo.
+- **Resultado: refutada.** `ConfigLoader.load` solo se llama desde `VMActuator.validate()` (línea 125),
+  el primer paso de toda transacción de contrato, antes de cualquier uso. Las funciones del lado TVM
+  solo las llaman la TVM (`ContractState`, `FreezeV2Util`) y `VMActuator`. La llamada de `Wallet.java`
+  que parecía usar la fórmula del lado TVM usa `EnergyProcessor`, que lee el almacén en vivo.
+- **Observación de diseño:** `VMConfig.globalSnapshot` nace con todo a `false`. Cualquier llamador futuro
+  fuera de una transacción de contrato leería valores por defecto, no los de la cadena. Hoy no existe.
+- **Prueba que quedaría (no hecha):** una prueba diferencial en local entre la fórmula del lado TVM y la
+  de los procesadores, con la bandera activada y desactivada, sobre entradas aleatorias.
 
 ## Matriz de actuadores (qué valida cada uno)
 
