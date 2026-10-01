@@ -34,6 +34,7 @@ Fecha de las mediciones: 2026-10-01. Entorno: Java 8 (OpenJDK 1.8.0_504), Gradle
 | R7 reversión | 60 | Revertir no descarta algún cambio | 48 pruebas | **Cerrado** |
 | R-tiempo (CPU) | 27 | El resultado depende de la velocidad del nodo | — | Diseño conocido (ratio de tiempo); su comprobación exige carga, fuera de alcance |
 | R10 coma flotante en consenso | 56 apariciones de `double` en 22 archivos; 5 usos de `pow` | El consenso depende de la precisión de `double` en algún cálculo que mueva valor | Propiedades (salida acotada, monótona, ida y vuelta) con oráculo y medición de error | **Medido** (ver Intercambio): error acotado, ≈2e-12 de la reserva por ida y vuelta |
+| R4 APIs HTTP (131 servlets) | 131 servlets, 203 métodos gRPC, 52 JSON-RPC | Alguna puerta HTTP no limita el tamaño del cuerpo | Comparar las guardas de los 131 servlets y el límite del servidor | **Cerrado**: límite global (ver abajo) |
 | R8 configuración local → validez | 7 mandos locales en rutas de validación | Un tercero sin privilegios puede cambiar la validez con una opción local | Listar mandos y quién los controla | **Cerrado** (ver abajo) |
 
 ### R8: configuración local que afecta a la validez
@@ -165,6 +166,40 @@ Prueba: `tests/ExchangeInvariantTest.java` (va en `framework/src/test/java/org/t
   cada intento exige una transacción con su coste. No se considera apto para reportar y no se
   documentan entradas concretas. Queda como observación: `I2` solo se puede garantizar hasta esa cota.
 - La prueba afirma I1, I3 y que la ganancia de ida y vuelta no supere 1e-11 de la reserva (hoy 2e-12).
+
+## APIs HTTP (R4): consistencia de guardas entre los 131 servlets
+
+Medido con un script sobre `framework/.../services/http/*Servlet.java`.
+
+| Medida | Valor |
+|---|---|
+| Servlets con `doPost` | 129 |
+| Usan `PostParams.getPostParams` (que ya llama a `checkBodySize`) | 87 |
+| Llaman a `checkBodySize` directamente | 23 |
+| Leen el cuerpo a mano (`getReader`/`getInputStream`) | 25 |
+| Con `doPost` que no leen cuerpo (consultas sin parámetros) | 18 |
+| Servlets que manejan el error por su cuenta en lugar de `Util.processError` | 9 |
+
+- **Valor atípico:** `BroadcastHexServlet` lee el cuerpo a mano y no llama a `checkBodySize` ni usa
+  `PostParams`. **Hipótesis:** esa puerta no tiene límite de tamaño. **Refutada:** cada servicio HTTP
+  (`HttpService.java:91`) envuelve todo en un `SizeLimitHandler(maxRequestSize, -1)` de Jetty, con el valor de
+  `httpMaxMessageSize` (4 MB por defecto), y lo usan los cuatro servicios (completo, solidity, PBFT y sobre
+  solidity). `checkBodySize` queda como segunda guarda, redundante con la global.
+- **Manejo de errores:** los 9 servlets que no usan `processError` (por ejemplo `TriggerSmartContractServlet`,
+  `EstimateEnergyServlet`) devuelven igualmente la clase de la excepción y su mensaje, en otro formato.
+  Es un diseño uniforme: divulga el nombre de la clase de excepción. Impacto bajo; no se considera reportable.
+- **No revisado:** límites de frecuencia en JSON-RPC (desactivado por defecto) y en gRPC, ni la
+  validación de parámetros dentro de cada servlet.
+
+### R3: propuestas sin ninguna prueba que las mencione
+
+Son 9 de 77. Las 8 reales son **parámetros de valor** de la época de lanzamiento (comisiones y pagos,
+códigos entre 5 y 47), no interruptores de comportamiento: `CREATE_NEW_ACCOUNT_FEE_IN_SYSTEM_CONTRACT`,
+`MULTI_SIGN_FEE`, `MAX_FEE_LIMIT`, `WITNESS_STANDBY_ALLOWANCE`, `WITNESS_PAY_PER_BLOCK`,
+`UPDATE_ACCOUNT_PERMISSION_FEE`, `WITNESS_127_PAY_PER_BLOCK`, `ADAPTIVE_RESOURCE_LIMIT_TARGET_RATIO`.
+Sin rama "activada/desactivada" el riesgo de comportamiento distinto es bajo. La novena,
+`TOTAL_CURRENT_ENERGY_LIMIT`, sale vacía por el fallo de emparejamiento ya descrito. La falta de mención
+en pruebas no prueba que no estén cubiertas de forma indirecta.
 
 ## Matriz de actuadores (qué valida cada uno)
 
