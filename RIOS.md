@@ -84,6 +84,42 @@ mantenedores.
 - **Prueba que quedaría (no hecha):** una prueba diferencial en local entre la fórmula del lado TVM y la
   de los procesadores, con la bandera activada y desactivada, sobre entradas aleatorias.
 
+### Prueba diferencial de las dos copias (hecha)
+
+Archivo: `tests/ResourceFormulaDifferentialTest.java` (va en `framework/src/test/java/org/tron/core/db/`
+de java-tron; se ejecuta con Java 8 y
+`./gradlew :framework:test --tests org.tron.core.db.ResourceFormulaDifferentialTest -i`).
+Entradas aleatorias con semilla fija. Los `assert now > lastTime` del código solo actúan en pruebas, por
+lo que se generan solo entradas con `now >= lastTime`.
+
+| Comparación | Casos | Discrepancias |
+|---|---|---|
+| `increase`, bandera apagada (`RepositoryImpl` frente a `EnergyProcessor`) | 20.000 | 0 |
+| `increase`, bandera encendida (11.853 con excepción en ambas) | 20.000 | 0 |
+| `getUsage`, bandera apagada y encendida | 40.000 | 0 |
+
+**Las dos copias coinciden.** Con esto la hipótesis de R9 queda cerrada también por prueba, no solo por lectura.
+
+### Límite de la prueba diferencial y oráculo independiente
+
+Las dos copias son idénticas, así que una prueba que las compara no detecta un defecto que ambas
+comparten. Por eso se añadió un oráculo en `BigInteger` (caso `lastTime == now`, sin decaimiento).
+
+- **Observación:** en las dos copias, incluso con el endurecimiento activo, la línea
+  `averageLastUsage += averageUsage;` es una suma de `long` sin comprobar. Cada término se comprueba por
+  separado (`longValueExact`), pero **su suma no**. Si cada uno cabe en 64 bits y la suma no, el
+  resultado se enrolla a negativo sin excepción.
+- **Resultado del oráculo:** 5.026 casos con uso hasta 1e12 (unas 10 veces el límite total de energía de la
+  red; con esa cota ningún desbordamiento es posible con ninguna ventana): **0 violaciones**. Fuera de
+  esa cota, 14 violaciones sobre 34.974 casos, todas con el patrón anterior. Ejemplo:
+  `increase(7524290872464, 8206654683304, 5, 5, 1)` devuelve `-2715798517941` en lugar de lanzar excepción.
+- **Alcance:** exige un uso de recursos de entre 1e12 y 1e18 y, en algunos casos, ventanas de 1 slot. El uso
+  real lo acotan los límites totales de energía y ancho de banda (orden de 1e10 a 1e11) y el
+  gasto máximo por transacción. **No hay una vía realista que lo alcance.**
+- **Conclusión:** endurecimiento incompleto en una zona inalcanzable, no una vulnerabilidad. No se
+  considera apto para reportar: no hay impacto demostrable con valores posibles. Queda anotado como
+  pregunta de diseño para los mantenedores.
+
 ## Matriz de actuadores (qué valida cada uno)
 
 Medida con un script sobre `validate()`/`execute()`. Heurística: cuenta patrones, no entiende la lógica.
