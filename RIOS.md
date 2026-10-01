@@ -35,6 +35,7 @@ Fecha de las mediciones: 2026-10-01. Entorno: Java 8 (OpenJDK 1.8.0_504), Gradle
 | R-tiempo (CPU) | 27 | El resultado depende de la velocidad del nodo | — | Diseño conocido (ratio de tiempo); su comprobación exige carga, fuera de alcance |
 | R10 coma flotante en consenso | 56 apariciones de `double` en 22 archivos; 5 usos de `pow` | El consenso depende de la precisión de `double` en algún cálculo que mueva valor | Propiedades (salida acotada, monótona, ida y vuelta) con oráculo y medición de error | **Medido** (ver Intercambio): error acotado, ≈2e-12 de la reserva por ida y vuelta |
 | R4 APIs HTTP (131 servlets) | 131 servlets, 203 métodos gRPC, 52 JSON-RPC | Alguna puerta HTTP no limita el tamaño del cuerpo | Comparar las guardas de los 131 servlets y el límite del servidor | **Cerrado**: límite global (ver abajo) |
+| R5 concurrencia (estado compartido mutable) | 98 campos de clase con colección no concurrente; 4 compartidos y mutables en ejecución | Un campo mutable lo tocan hilos distintos sin cerrojo común, con efecto sobre el estado de cadena | Clasificar los 98 y mirar quién escribe y quién lee | **Medido**: 4 candidatos, sin efecto sobre consenso (ver abajo) |
 | R8 configuración local → validez | 7 mandos locales en rutas de validación | Un tercero sin privilegios puede cambiar la validez con una opción local | Listar mandos y quién los controla | **Cerrado** (ver abajo) |
 
 ### R8: configuración local que afecta a la validez
@@ -200,6 +201,33 @@ códigos entre 5 y 47), no interruptores de comportamiento: `CREATE_NEW_ACCOUNT_
 Sin rama "activada/desactivada" el riesgo de comportamiento distinto es bajo. La novena,
 `TOTAL_CURRENT_ENERGY_LIMIT`, sale vacía por el fallo de emparejamiento ya descrito. La falta de mención
 en pruebas no prueba que no estén cubiertas de forma indirecta.
+
+## Concurrencia (R5): estado compartido mutable
+
+Se listaron los campos de clase (no variables locales) con `HashMap`, `ArrayList`, `HashSet`,
+`LinkedList`, `LRUMap`... y se descartó lo que lleva `Concurrent*`, `synchronized` o `CopyOnWrite`.
+Son **98 campos** en el código principal, más 1 estático con `LRUMap` (`Program.programPrecompileLRUMap`,
+ya analizado en el mapa: no lo usan las llamadas constantes y la clave incluye el hash del código).
+
+Clasificación a mano de los 98:
+- **La gran mayoría no se comparte entre hilos:** DTO y configuración, constructores de transacciones
+  protegidas, cachés por instancia de `RepositoryImpl` (una instancia por ejecución), pilas y trazas de la
+  TVM por programa, tablas estáticas que se llenan al cargar la clase.
+- **Solo se escribe al arrancar:** `DposService.miners` (se llena en `start`).
+- **Compartidos y mutables en ejecución (4):**
+
+| Campo | Quién escribe | Quién lee | Valoración |
+|---|---|---|---|
+| `Manager.ownerAddressSet` (`HashSet`) | `pushBlock` y `pushTransaction`, bajo `synchronized(this)` | también `generateBlock` (hilo de producción, solo SR), donde no se vio un cerrojo | Solo nodos productores (acceso privilegiado). Una lectura inconsistente solo afectaría al bloque que ese SR produce. No se confirmó el cerrojo. |
+| `WitnessProductBlockService.cheatWitnessInfoMap` (`HashMap`) | hilo que procesa bloques | hilo de la API de información del nodo, que recorre el mapa | Posible `ConcurrentModificationException` en una consulta informativa. Sin efecto sobre cadena. |
+| `PeerConnection.syncBlockInProcess` (`HashSet`) | hilo de mensajes P2P (`add`) | hilo de sincronización (`remove`, `contains`), desconexión (`clear`) y métricas (`size`) | Carrera de datos sobre un conjunto simple. El efecto queda en el estado de sincronización **de esa conexión** y se limpia al desconectar. La misma familia que el issue #6969 y su PR #6983, abiertos. |
+| `SnapshotManager.dbs` y `flushServices` | arranque | varios | Se llenan al inicio; no se revisó el acceso posterior. |
+
+**Conclusión:** de 98 campos, 4 son candidatos reales y ninguno afecta al consenso de forma alcanzable sin
+privilegios. Lo más cercano (`syncBlockInProcess`) está en una familia que los mantenedores ya tienen
+abierta. Queda sin revisar la corrección de los cerrojos de `Manager` (la combinación `synchronized(this)`,
+`transactionLock`, `forkLock` y los bloqueos de `pushBlock`), que es donde más ayuda el razonamiento que el
+recuento.
 
 ## Matriz de actuadores (qué valida cada uno)
 
